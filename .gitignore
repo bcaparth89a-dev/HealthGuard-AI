@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+/frontend/node_modules/
+/backend/node_modules/
+
+# Local configuration / Environment keys
+.env
+/frontend/.env
+/backend/.env
+/ml-api/.env
+
+# Bundles and distribution folders
+dist/
+/frontend/dist/
+build/
+
+# IDE / Editor logs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS temp files
+.DS_Store
+Thumbs.db
+
+# Python caches and compiled files (ML API)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Supabase Local DB logs and files
+.supabase/
