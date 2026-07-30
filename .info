@@ -1,0 +1,43 @@
+=========================================
+🛡️ HealthGuard AI - Smart Healthcare Portal
+=========================================
+
+HealthGuard AI is a premium, secure electronic medical record (EMR) and disease risk prediction portal. The system uses clinical vital assessments, automated diagnosis tracking, and Gemini AI analysis to predict health metrics and consolidate detailed patient health reports.
+
+-----------------------------------------
+🚀 THE DEVELOPMENT TEAM
+-----------------------------------------
+
+HealthGuard AI was built with ❤️ by:
+
+• Parth Pawar
+  Role: Lead Full Stack Developer
+  Focus: Backend APIs, Database Integrations, System Architecture, & Security
+
+• Pranjal Shukla
+  Role: Frontend Developer
+  Focus: Modern UI Interfaces, Patient Profile Analytics, & Interactive Features
+
+• Aditya
+  Role: UI/UX Designer
+  Focus: Apple-inspired Premium Aesthetics, Typography, & Layout Designs
+
+-----------------------------------------
+💻 TECHNICAL STACK
+-----------------------------------------
+
+• Frontend: React, Vite, Tailwind CSS, Framer Motion, Axios, React Query, Lucide Icons
+• Backend API: Node.js, Express, Supabase (PostgreSQL), JWT Authorization
+• Machine Learning: FastAPI, Python (Scikit-Learn models for disease risk prediction)
+• Generative AI: Google Gemini AI (Clinical report extraction & triage evaluations)
+
+-----------------------------------------
+🌟 KEY FEATURES
+-----------------------------------------
+
+• Secure Provider/Clinician Authentication & Isolated Dashboards
+• Interactive "Made with Love" Developer Showcase Modal
+• Multi-Patient Directory & Family Member Management
+• Real-time Machine Learning Health Risk Predictions (Diabetes, Cardiovascular, Stroke)
+• Automated EMR Generation & PDF Report Downloading
+• Google Gemini AI-powered Symptom Checker & Clinical Recommendation Engine

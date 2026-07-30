@@ -9,12 +9,17 @@
     "dev": "nodemon src/server.js"
   },
   "dependencies": {
+    "@google/genai": "^2.13.0",
+    "@supabase/supabase-js": "^2.39.0",
     "axios": "^1.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.0",
     "express": "^4.19.0",
     "helmet": "^7.1.0",
-    "morgan": "^1.10.0"
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
+    "morgan": "^1.10.0",
+    "multer": "^2.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"

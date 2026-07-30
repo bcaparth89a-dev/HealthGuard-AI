@@ -1,250 +1,667 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  BarChart,
-  Bar
-} from 'recharts';
+import React, { useState } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Activity, 
   FileText, 
   Heart, 
   ShieldAlert, 
   AlertTriangle,
-  RotateCw
+  RotateCw,
+  User,
+  Users,
+  Plus,
+  Calendar,
+  Phone,
+  ShieldCheck,
+  ChevronRight,
+  TrendingUp,
+  MapPin,
+  Clock,
+  Sparkles
 } from 'lucide-react';
+import { 
+  ResponsiveContainer, 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip,
+  BarChart,
+  Bar
+} from 'recharts';
 import healthService from '../../services/healthService';
+import useAuth from '../../hooks/useAuth';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 
+// Avatar Presets list for EMR family members
+const AVATAR_PRESETS = [
+  { name: 'Physician / Professional', url: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=150' },
+  { name: 'Female Profile 1', url: 'https://images.unsplash.com/photo-1594824813573-246434de83fb?auto=format&fit=crop&q=80&w=150' },
+  { name: 'Male Profile 1', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150' },
+  { name: 'Female Profile 2', url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150' },
+  { name: 'Male Profile 2', url: 'https://images.unsplash.com/photo-1628157582853-a796fa650a6a?auto=format&fit=crop&q=80&w=150' },
+  { name: 'Elderly Profile', url: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150' }
+];
+
 export const DashboardPage = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(AVATAR_PRESETS[0].url);
+
+  // Form states for family member adding
+  const [fullName, setFullName] = useState('');
+  const [relationship, setRelationship] = useState('Spouse');
+  const [gender, setGender] = useState('Male');
+  const [dob, setDob] = useState('');
+  const [age, setAge] = useState('');
+  const [bloodGroup, setBloodGroup] = useState('O+');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [phone, setPhone] = useState('');
+  const [emergencyContact, setEmergencyContact] = useState('');
+
+  // Fetch family members list
+  const { data: familyMembers = [], isLoading: isMembersLoading } = useQuery({
+    queryKey: ['familyMembersList'],
+    queryFn: healthService.getFamilyMembers,
+  });
+
+  // Fetch reports list to display latest scores on cards
+  const { data: reports = [] } = useQuery({
+    queryKey: ['allReportsForCards'],
+    queryFn: () => healthService.getAllReports(),
+  });
+
+  // Fetch EMR statistics and graphs for EMR Control Panel
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['dashboardSummary'],
     queryFn: healthService.getDashboardSummary,
   });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-8 animate-pulse">
-        <div className="h-10 w-64 bg-slate-200 rounded-lg" />
-        
-        {/* Grid Skeletons */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-slate-200 rounded-2xl" />
-          ))}
-        </div>
+  // Add Family Member Mutation
+  const addMemberMutation = useMutation({
+    mutationFn: healthService.addFamilyMember,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['familyMembersList'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboardSummary'] });
+      setIsAddModalOpen(false);
+      resetForm();
+      alert('Family Member added successfully to EMR directory!');
+    },
+    onError: (err) => {
+      alert('Failed to add family member: ' + err.message);
+    }
+  });
 
-        {/* Chart Skeleton */}
-        <div className="h-96 bg-slate-200 rounded-2xl" />
-      </div>
-    );
-  }
+  const resetForm = () => {
+    setFullName('');
+    setRelationship('Spouse');
+    setGender('Male');
+    setDob('');
+    setAge('');
+    setBloodGroup('O+');
+    setHeight('');
+    setWeight('');
+    setPhone('');
+    setEmergencyContact('');
+    setSelectedAvatar(AVATAR_PRESETS[0].url);
+  };
 
-  if (isError) {
-    return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center shadow-premium">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500 mb-4">
-          <AlertTriangle size={24} />
-        </div>
-        <h3 className="text-md font-bold text-slate-800">Failed to load dashboard data</h3>
-        <p className="mt-1 text-sm text-slate-500 max-w-sm">
-          {error?.message || 'We encountered an error connecting to the health api service.'}
-        </p>
-        <Button onClick={refetch} variant="outline" className="mt-4 gap-2">
-          <RotateCw size={16} />
-          Retry Connection
-        </Button>
-      </div>
-    );
-  }
+  const handleAddMemberSubmit = (e) => {
+    e.preventDefault();
+    if (!fullName) return alert('Name is required.');
 
-  // Handle case where API response contains no data elements (Empty state)
-  const hasNoData = !data || Object.keys(data).length === 0;
+    addMemberMutation.mutate({
+      full_name: fullName,
+      gender,
+      age: parseInt(age, 10) || 30,
+      dob: dob || null,
+      blood_group: bloodGroup,
+      relationship,
+      phone: phone || null,
+      photo: selectedAvatar,
+      height: height ? parseFloat(height) : null,
+      weight: weight ? parseFloat(weight) : null,
+      emergency_contact: emergencyContact || null
+    });
+  };
 
-  if (hasNoData) {
-    return (
-      <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center shadow-premium">
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 text-slate-400 mb-4">
-          <Activity size={24} />
-        </div>
-        <h3 className="text-md font-bold text-slate-800">No Patient Activity Recorded</h3>
-        <p className="mt-1 text-sm text-slate-500 max-w-sm">
-          Welcome to HealthGuard AI! Start logging symptoms or uploading medical records to build your health profile.
-        </p>
-      </div>
-    );
-  }
+  const getRiskColor = (risk) => {
+    if (risk === 'Low' || risk === 'Normal') return 'bg-emerald-50 text-emerald-700 border-emerald-100';
+    if (risk === 'Moderate') return 'bg-amber-50 text-amber-700 border-amber-100';
+    return 'bg-rose-50 text-rose-700 border-rose-100';
+  };
 
-  // Destructure real parameters from API payload
-  const { metrics, trends, alerts } = data;
+  // Compile statistics
+  const emrStats = data?.emrStats ?? {
+    totalFamilyMembers: 0,
+    totalReports: 0,
+    todayReports: 0,
+    highRiskMembers: 0,
+    recentReports: [],
+    recentAssessments: [],
+    upcomingFollowUps: [],
+    latestAiRecommendations: null
+  };
+
+  // Compile members stats for display
+  const compiledMembers = familyMembers.map(m => {
+    // Find latest report for this member
+    const memberReports = reports.filter(r => r.member_id === m.member_id)
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const latestReport = memberReports[0];
+
+    return {
+      ...m,
+      latestScore: latestReport ? (latestReport.health_score || latestReport.overall_health_score || 0) : 'N/A',
+      latestRisk: latestReport ? (latestReport.overall_risk || 'Low') : 'N/A',
+      lastAssessmentDate: latestReport ? new Date(latestReport.created_at).toLocaleDateString() : 'No scan yet'
+    };
+  });
 
   return (
-    <div className="space-y-8">
-      {/* Welcome header */}
+    <div className="space-y-8 max-w-7xl mx-auto">
+      
+      {/* Welcome Greeting Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
+            <Users className="text-teal-600 animate-pulse" size={26} />
+            Welcome, {user?.name || 'User'}
+          </h1>
+          <p className="text-sm text-slate-500">Family Electronic Medical Record (EMR) System. isolated histories, automated diagnostics.</p>
+        </div>
+        <Button 
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-teal-600 hover:bg-teal-700 text-xs font-bold gap-1.5 py-2.5 rounded-xl shadow-sm"
+        >
+          <Plus size={16} /> Add Family Member
+        </Button>
+      </div>
+
+      {/* Stats Cards Row */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        
+        {/* Total Family Members */}
+        <Card animate>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Family Members</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-800">{emrStats.totalFamilyMembers}</h4>
+            </div>
+            <div className="p-2.5 bg-teal-50 text-teal-600 rounded-xl">
+              <Users size={18} />
+            </div>
+          </div>
+        </Card>
+
+        {/* Total EMR Files */}
+        <Card animate>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Reports</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-800">{emrStats.totalReports}</h4>
+            </div>
+            <div className="p-2.5 bg-blue-50 text-blue-600 rounded-xl">
+              <FileText size={18} />
+            </div>
+          </div>
+        </Card>
+
+        {/* High Risk Members */}
+        <Card animate>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">High Risk Alerts</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-rose-600">{emrStats.highRiskMembers}</h4>
+            </div>
+            <div className="p-2.5 bg-rose-50 text-rose-500 rounded-xl">
+              <ShieldAlert size={18} />
+            </div>
+          </div>
+        </Card>
+
+        {/* Today's Evaluations */}
+        <Card animate>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Today's Reports</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-800">{emrStats.todayReports}</h4>
+            </div>
+            <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl">
+              <Activity size={18} />
+            </div>
+          </div>
+        </Card>
+
+      </div>
+
+      {/* Family Directory grid section */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-800">Patient Dashboard</h1>
-        <p className="text-sm text-slate-500">Real-time biometrics evaluation and AI threat modeling reports.</p>
+        <div className="border-b border-slate-100 pb-3 mb-5">
+          <h3 className="text-md font-bold text-slate-800">Family Members Directories</h3>
+          <p className="text-xs text-slate-400 font-medium">Select a card to view their patient profile and diagnostics trends history.</p>
+        </div>
+
+        {isMembersLoading ? (
+          <div className="flex flex-col items-center justify-center min-h-[200px] bg-white rounded-3xl border border-slate-100 p-8">
+            <div className="h-8 w-8 animate-spin rounded-full border-3 border-slate-100 border-t-teal-600 mb-3" />
+            <p className="text-xs font-bold text-slate-400 uppercase">Pulling EMR profiles...</p>
+          </div>
+        ) : compiledMembers.length === 0 ? (
+          <div className="flex flex-col items-center justify-center min-h-[200px] bg-white border border-slate-100 border-dashed rounded-3xl p-8 text-center">
+            <Users className="h-10 w-10 text-slate-300 mb-3 animate-pulse" />
+            <h4 className="text-sm font-bold text-slate-700">No Family Profiles Registered</h4>
+            <p className="text-xs text-slate-400 max-w-sm mt-1 mb-4">You have not registered any family members under your EMR dashboard directory.</p>
+            <Button onClick={() => setIsAddModalOpen(true)} className="bg-teal-600 hover:bg-teal-700 text-xs font-bold">
+              Add First Family Member
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {compiledMembers.map((member) => (
+              <div 
+                key={member.member_id}
+                className="bg-white border border-slate-200/70 hover:border-teal-500/40 rounded-3xl p-5 shadow-sm hover:shadow-premium transition-all duration-300 flex flex-col justify-between group"
+              >
+                <div>
+                  {/* Demographics details */}
+                  <div className="flex justify-between items-start border-b border-slate-50 pb-3 mb-4">
+                    <div className="flex items-center gap-3">
+                      {member.photo ? (
+                        <img 
+                          src={member.photo} 
+                          alt={member.full_name} 
+                          className="h-12 w-12 rounded-full object-cover border border-slate-100 shadow-inner"
+                        />
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-teal-50 text-teal-600 flex items-center justify-center font-extrabold text-sm shadow-inner group-hover:bg-teal-500 group-hover:text-white transition-colors">
+                          {member.full_name.substring(0, 2).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-800 group-hover:text-teal-600 transition-colors leading-tight">{member.full_name}</h4>
+                        <span className="text-[10px] text-slate-400 font-extrabold uppercase mt-0.5 inline-block bg-slate-50 px-2 py-0.5 rounded border border-slate-100">
+                          {member.relationship}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-y-3 gap-x-2 text-xs font-semibold text-slate-500">
+                    <div>
+                      <span className="text-[9px] text-slate-400 block uppercase font-bold">Demographics</span>
+                      <span className="text-slate-850 block">{member.gender}, {member.age} yrs</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-slate-400 block uppercase font-bold">Blood Group</span>
+                      <span className="text-slate-850 block">{member.blood_group || 'N/A'}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-slate-400 block uppercase font-bold">Latest Score</span>
+                      <span className="text-slate-900 font-extrabold block">{member.latestScore}</span>
+                    </div>
+                    <div>
+                      <span className="text-[9px] text-slate-400 block uppercase font-bold">Latest Risk</span>
+                      {member.latestRisk !== 'N/A' ? (
+                        <span className={`inline-flex px-1.5 py-0.5 rounded text-[8px] font-extrabold border mt-0.5 ${getRiskColor(member.latestRisk)}`}>
+                          {member.latestRisk}
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 font-medium block">N/A</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Patient cards action controls */}
+                <div className="mt-6 pt-4 border-t border-slate-50">
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button 
+                      onClick={() => navigate(`/family-members/${member.member_id}`)}
+                      variant="outline" 
+                      className="text-[9px] font-extrabold py-2 px-1 border-slate-100 hover:bg-slate-50 rounded-xl"
+                    >
+                      Open Profile
+                    </Button>
+                    <Button 
+                      onClick={() => navigate(`/assessment?memberId=${member.member_id}`)}
+                      className="bg-teal-600 hover:bg-teal-700 text-[9px] font-extrabold py-2 px-1 rounded-xl"
+                    >
+                      New Assess
+                    </Button>
+                    <Button 
+                      onClick={() => navigate(`/reports?memberId=${member.member_id}`)}
+                      variant="outline" 
+                      className="text-[9px] font-extrabold py-2 px-1 border-slate-100 hover:bg-slate-50 rounded-xl"
+                    >
+                      View Reports
+                    </Button>
+                  </div>
+                  <p className="text-[9px] text-slate-400 font-bold text-center mt-3 flex items-center justify-center gap-1">
+                    <Clock size={10} /> Last Assessment: {member.lastAssessmentDate}
+                  </p>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Card animate>
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Cardiovascular Risk</p>
-              <h4 className="mt-2 text-2xl font-bold text-slate-800">{metrics.cardioRisk}%</h4>
-            </div>
-            <div className="p-3 bg-rose-50 text-rose-500 rounded-xl">
-              <Heart size={20} />
-            </div>
-          </div>
-          <div className="mt-4 flex items-center text-xs">
-            <span className={`font-semibold ${metrics.riskTrend === 'up' ? 'text-red-500' : 'text-emerald-500'}`}>
-              {metrics.riskTrend === 'up' ? '↑' : '↓'} {metrics.riskDelta}%
-            </span>
-            <span className="text-slate-400 ml-2">since last examination</span>
-          </div>
-        </Card>
-
-        <Card animate>
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Active Alert Level</p>
-              <h4 className="mt-2 text-2xl font-bold text-slate-800">{metrics.alertStatus}</h4>
-            </div>
-            <div className={`p-3 rounded-xl ${metrics.alertStatus === 'Critical' ? 'bg-red-50 text-red-500' : 'bg-amber-50 text-amber-500'}`}>
-              <ShieldAlert size={20} />
-            </div>
-          </div>
-          <div className="mt-4 text-xs text-slate-400">
-            Based on current vitals & diagnostic records
-          </div>
-        </Card>
-
-        <Card animate>
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Logged Symptoms</p>
-              <h4 className="mt-2 text-2xl font-bold text-slate-800">{metrics.symptomCount}</h4>
-            </div>
-            <div className="p-3 bg-brand-50 text-brand-500 rounded-xl">
-              <Activity size={20} />
-            </div>
-          </div>
-          <div className="mt-4 text-xs text-slate-400">
-            Last logged: {metrics.lastSymptomDate}
-          </div>
-        </Card>
-
-        <Card animate>
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Clinical Documents</p>
-              <h4 className="mt-2 text-2xl font-bold text-slate-800">{metrics.recordCount}</h4>
-            </div>
-            <div className="p-3 bg-accent-50 text-accent-500 rounded-xl">
-              <FileText size={20} />
-            </div>
-          </div>
-          <div className="mt-4 text-xs text-slate-400">
-            Fully digitized files
-          </div>
-        </Card>
-      </div>
-
-      {/* Charts section */}
+      {/* EMR Reports and Followups splits section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        
+        {/* Recent EMR Reports */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>Health Indicator Timeline</CardTitle>
-            <p className="text-xs text-slate-400">Biometric trend aggregation and risk indexing</p>
+            <CardTitle>Recent Patient EMR Reports</CardTitle>
+            <p className="text-xs text-slate-400">Newly archived health assessments and diagnostics records.</p>
           </CardHeader>
-          <CardContent className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={trends} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="colorRisk" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <Tooltip />
-                <Area type="monotone" dataKey="value" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorRisk)" />
-              </AreaChart>
-            </ResponsiveContainer>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs font-semibold text-slate-600">
+                <thead className="text-[10px] uppercase tracking-wider text-slate-400 border-b border-slate-100">
+                  <tr>
+                    <th className="pb-3">Report ID</th>
+                    <th className="pb-3">Patient Name</th>
+                    <th className="pb-3">Relationship</th>
+                    <th className="pb-3">Risk Category</th>
+                    <th className="pb-3">Index Score</th>
+                    <th className="pb-3">Timestamp</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                  {emrStats.recentReports.map((report, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/50">
+                      <td className="py-3 text-slate-900 font-bold select-all">{report.id}</td>
+                      <td className="py-3 text-slate-800 font-bold">{report.patientName}</td>
+                      <td className="py-3 text-slate-400">{report.relationship}</td>
+                      <td className="py-3">
+                        <span className={`px-2 py-0.5 rounded text-[9px] font-extrabold border ${
+                          report.overallRisk === 'High' ? 'bg-rose-50 text-rose-700 border-rose-100' :
+                          report.overallRisk === 'Moderate' ? 'bg-amber-50 text-amber-700 border-amber-100' :
+                          'bg-emerald-50 text-emerald-700 border-emerald-100'
+                        }`}>
+                          {report.overallRisk}
+                        </span>
+                      </td>
+                      <td className="py-3 text-slate-700 font-bold">{report.healthScore}</td>
+                      <td className="py-3 text-slate-400 text-[10px]">{report.date} {report.time}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </CardContent>
         </Card>
 
+        {/* Upcoming Followups */}
         <Card>
           <CardHeader>
-            <CardTitle>Anomalies Matrix</CardTitle>
-            <p className="text-xs text-slate-400">Critical trigger occurrences count</p>
+            <CardTitle>Upcoming Clinical Follow-ups</CardTitle>
+            <p className="text-xs text-slate-400">Automated scheduling suggestions based on warning indicators.</p>
           </CardHeader>
-          <CardContent className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={alerts.distribution} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="category" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <Tooltip />
-                <Bar dataKey="count" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <CardContent>
+            <div className="space-y-4">
+              {emrStats.upcomingFollowUps.map((followUp, idx) => (
+                <div key={idx} className="flex justify-between items-start border-b border-slate-50 pb-3 last:border-none last:pb-0">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-800">{followUp.patientName}</h4>
+                    <p className="text-[10px] text-slate-400 font-semibold mt-0.5">{followUp.activity} ({followUp.relationship})</p>
+                    <span className="text-[9px] text-slate-400 font-bold block mt-1">{followUp.date}</span>
+                  </div>
+                  <span className={`px-2 py-0.5 rounded text-[8px] font-extrabold ${
+                    followUp.status === 'High Priority' ? 'bg-rose-50 text-rose-700' : 'bg-amber-50 text-amber-700'
+                  }`}>
+                    {followUp.status}
+                  </span>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
+
       </div>
 
-      {/* Active Alerts Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Diagnostic Triggers</CardTitle>
-          <p className="text-xs text-slate-400">Vitals and clinical records scanned for anomaly patterns.</p>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600">
-              <thead className="text-xs uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                <tr>
-                  <th className="pb-3 font-semibold">Incident</th>
-                  <th className="pb-3 font-semibold">Severity</th>
-                  <th className="pb-3 font-semibold">Timestamp</th>
-                  <th className="pb-3 font-semibold">Source</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50 font-medium">
-                {alerts.list.map((alert, index) => (
-                  <tr key={index} className="hover:bg-slate-50/50">
-                    <td className="py-3.5 text-slate-800">{alert.message}</td>
-                    <td className="py-3.5">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
-                        alert.severity === 'Critical' 
-                          ? 'bg-red-50 text-red-700' 
-                          : alert.severity === 'Warning'
-                          ? 'bg-amber-50 text-amber-700'
-                          : 'bg-blue-50 text-blue-700'
-                      }`}>
-                        {alert.severity}
-                      </span>
-                    </td>
-                    <td className="py-3.5 text-slate-400 text-xs">{alert.timestamp}</td>
-                    <td className="py-3.5 text-slate-500 text-xs">{alert.source}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* Latest AI Recommendations Column */}
+      {emrStats.latestAiRecommendations && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-1.5">
+              <Sparkles size={16} className="text-teal-600 animate-bounce" />
+              Latest Physician EMR Recommendations ({emrStats.latestAiRecommendations.patientName})
+            </CardTitle>
+            <p className="text-xs text-slate-400">GenAI clinical synthesis derived from latest diagnostics records.</p>
+          </CardHeader>
+          <CardContent className="space-y-4 text-xs font-semibold text-slate-600">
+            <div>
+              <p className="text-slate-800 font-bold">Summary Review:</p>
+              <p className="mt-1 font-medium bg-slate-50 p-3 rounded-xl border border-slate-100">{emrStats.latestAiRecommendations.summary}</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+              <div>
+                <p className="text-teal-700 font-bold border-b pb-1">Diet modifications</p>
+                <ul className="list-disc list-inside mt-2 space-y-1 font-medium">
+                  {emrStats.latestAiRecommendations.diet.slice(0, 3).map((d, i) => <li key={i}>{d}</li>)}
+                </ul>
+              </div>
+              <div>
+                <p className="text-indigo-700 font-bold border-b pb-1">Physical guidelines</p>
+                <ul className="list-disc list-inside mt-2 space-y-1 font-medium">
+                  {emrStats.latestAiRecommendations.exercise.slice(0, 3).map((e, i) => <li key={i}>{e}</li>)}
+                </ul>
+              </div>
+              <div>
+                <p className="text-amber-700 font-bold border-b pb-1">Precautions checklist</p>
+                <ul className="list-disc list-inside mt-2 space-y-1 font-medium">
+                  {emrStats.latestAiRecommendations.precautions.slice(0, 3).map((p, i) => <li key={i}>{p}</li>)}
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ADD FAMILY MEMBER MODAL DIALOG SLIDE */}
+      <AnimatePresence>
+        {isAddModalOpen && (
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex justify-center items-center p-4">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-3xl w-full max-w-lg shadow-premium overflow-hidden"
+            >
+              <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex justify-between items-center">
+                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                  <Plus size={16} className="text-teal-600" />
+                  Add Family Member Profile
+                </h3>
+                <button 
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="text-xs font-bold text-slate-400 hover:text-slate-800"
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <form onSubmit={handleAddMemberSubmit} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+                
+                {/* Name & Relationship */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Full Name *</label>
+                    <input 
+                      type="text"
+                      required
+                      placeholder="e.g. Umesh Shah"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-500"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Relationship *</label>
+                    <select
+                      value={relationship}
+                      onChange={(e) => setRelationship(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:border-teal-500"
+                    >
+                      <option value="Self">Self (Account Owner)</option>
+                      <option value="Spouse">Spouse</option>
+                      <option value="Father">Father</option>
+                      <option value="Mother">Mother</option>
+                      <option value="Brother">Brother</option>
+                      <option value="Sister">Sister</option>
+                      <option value="Son">Son</option>
+                      <option value="Daughter">Daughter</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Gender & DOB */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Gender *</label>
+                    <select
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    >
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Date of Birth</label>
+                    <input 
+                      type="date"
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Age *</label>
+                    <input 
+                      type="number"
+                      required
+                      placeholder="e.g. 52"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Demographics Height/Weight/Blood */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Blood Group</label>
+                    <select
+                      value={bloodGroup}
+                      onChange={(e) => setBloodGroup(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    >
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Height (cm)</label>
+                    <input 
+                      type="number"
+                      placeholder="e.g. 175"
+                      value={height}
+                      onChange={(e) => setHeight(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Weight (kg)</label>
+                    <input 
+                      type="number"
+                      placeholder="e.g. 70"
+                      value={weight}
+                      onChange={(e) => setWeight(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Contact numbers */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Phone Number</label>
+                    <input 
+                      type="text"
+                      placeholder="e.g. +12345678"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="text-[10px] font-bold text-slate-400 uppercase">Emergency Contact</label>
+                    <input 
+                      type="text"
+                      placeholder="e.g. Spouse Name - +987654"
+                      value={emergencyContact}
+                      onChange={(e) => setEmergencyContact(e.target.value)}
+                      className="px-3 py-2 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Photo selection presets */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Select Avatar Style</label>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {AVATAR_PRESETS.map((preset, idx) => (
+                      <div 
+                        key={idx}
+                        onClick={() => setSelectedAvatar(preset.url)}
+                        className={`h-11 w-11 rounded-full overflow-hidden cursor-pointer border-2 transition-all shadow-sm ${
+                          selectedAvatar === preset.url ? 'border-teal-500 scale-105' : 'border-transparent'
+                        }`}
+                        title={preset.name}
+                      >
+                        <img src={preset.url} alt="preset" className="h-full w-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Form submit button */}
+                <Button 
+                  type="submit"
+                  className="w-full bg-teal-600 hover:bg-teal-700 text-xs font-bold py-3 mt-4 rounded-xl shadow-sm"
+                  disabled={addMemberMutation.isPending}
+                >
+                  {addMemberMutation.isPending ? 'Registering...' : 'Register Family Member'}
+                </Button>
+
+              </form>
+            </motion.div>
           </div>
-        </CardContent>
-      </Card>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

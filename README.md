@@ -1,6 +1,6 @@
 # HealthGuard AI
 
-HealthGuard AI is a production-ready, scalable, and modular full-stack hackathon project.
+HealthGuard AI is a production-ready, scalable, and modular full-stack preventive healthcare platform. It predicts disease risks using machine learning models trained on real medical datasets and generates AI-driven recommendations.
 
 ## Project Structure Overview
 
@@ -23,59 +23,78 @@ React UI client initialized with Vite. Contains the component library, UI layout
 
 - **`public/`**: Static assets that are served directly.
 - **`src/assets/`**: Uncompiled assets (images, custom SVGs, global logos).
-- **`src/components/`**: Shared components reusable across features:
-  - **`ui/`**: Base design system components (buttons, input fields, checkboxes, modals).
-  - **`common/`**: Shell components like Header, Sidebar, and layouts.
-  - **`feedback/`**: Status/loading components (skeletons, toast system, loading spinners).
-- **`src/context/`**: React context providers (e.g., Authentication state, global application state).
-- **`src/features/`**: Feature-oriented domain modules containing page layouts, specialized hooks, and routing components:
-  - **`auth/`**: Authentication forms and authorization checks.
-  - **`dashboard/`**: User dashboard cards, statistics panels, and overview layouts.
-  - **`symptom-checker/`**: Questionnaire wizard and AI chatbot UI.
-  - **`ml-predictor/`**: Predictive forms and SHAP visualization interfaces.
-  - **`medical-records/`**: Records scanning/upload and document viewing.
-- **`src/hooks/`**: Global custom utility hooks (e.g., `useDebounce`, `useLocalStorage`).
-- **`src/lib/`**: Initialization of external libraries (Axios client config, React Query clients, Supabase JS clients).
-- **`src/routes/`**: Client routing configurations (e.g., protected routes, login redirections).
-- **`src/services/`**: API boundary service layer functions mapping backend requests to Query hooks.
-- **`src/styles/`**: Custom Tailwind directives, color themes, and global font definitions.
-- **`src/utils/`**: Helper methods, date formats, math calculations, and validators.
-
----
+- **`src/components/`**: Shared components reusable across features.
+- **`src/features/`**: Feature-oriented domain modules (Dashboard, Assessment, Chatbot).
+- **`src/services/`**: API boundary service layer functions mapping backend requests.
 
 ### 2. Backend (`/backend`)
-Node.js + Express.js API server coordinating the database connection, GenAI integration (Gemini), and the main application business logic.
+Node.js + Express.js API server coordinating the database connection, GenAI integration (Gemini), and predictions routing.
 
-- **`src/config/`**: Setup for environment validation, db pool, and API clients.
-- **`src/controllers/`**: Endpoint request orchestrators separating raw HTTP parsing from backend actions.
-- **`src/middleware/`**: Routing interceptors (token verification, schema validations, rate limiters, global error-catch blocks).
-- **`src/models/`**: Domain model mappings (types/schemas indicating DB structures).
-- **`src/routes/`**: REST API endpoints version-controlled under `/api/v1/`.
-- **`src/services/`**: Central services layer implementing actual workflows (e.g., PDF text extraction, Gemini LLM prompts).
-- **`src/utils/`**: General helpers (custom API error classes, logging formats).
-- **`tests/`**: Integration and unit testing files.
-
----
+- **`src/config/`**: Setup for environment validation and db pool.
+- **`src/controllers/`**: Endpoint request orchestrators.
+- **`src/routes/`**: REST API endpoints version-controlled.
+- **`src/services/`**: Central services layer (Gemini analysis, database syncs).
 
 ### 3. Machine Learning API (`/ml-api`)
-FastAPI service exposing predictive scikit-learn models and explaining predictions using SHAP.
+FastAPI service exposing predictive scikit-learn models.
 
-- **`app/api/v1/`**: FastAPI routers mapping API paths to model inference handlers.
-- **`app/core/`**: Central FastAPI system configuration, logging settings, and global middleware definitions.
-- **`app/models/`**: Python class wrapper logic to load and run serialized machine learning classifiers.
-- **`app/schemas/`**: Pydantic schemas validating client payloads and output structures.
-- **`app/services/`**: Logical functions processing predictions and generating SHAP values.
-- **`app/utils/`**: Utilities for mathematical conversions, array manipulations, or features alignment.
-- **`data/`**: Raw dataset files used during model tuning (gitignored).
+- **`app/schemas/`**: Pydantic schemas validating client payloads.
+- **`app/predictor.py`**: Model loading and inference routines.
 - **`models/`**: Storage for pickled/joblib model state files.
-- **`notebooks/`**: Storage for Jupyter notebooks covering initial model training, SHAP feature assessment, and EDA.
-- **`tests/`**: Testing routines validating ML output ranges and prediction response times.
-
----
+- **`train/`**: Custom python scripts for model training.
 
 ### 4. Database (`/supabase`)
 Supabase schema, migration history, and localized edge functions.
 
-- **`migrations/`**: Raw SQL migration tables defining database columns, constraints, and enabling extensions (e.g., `pgvector`).
-- **`functions/`**: Deno-based Edge Functions triggered by database actions.
-- **`seed.sql`**: Test dataset scripts to pre-fill database states locally.
+- **`migrations/`**: SQL files mapping database structures, security policies, and sync triggers.
+
+---
+
+## Deployment Guide
+
+This guide details the step-by-step instructions to deploy each component of the HealthGuard AI platform.
+
+### 1. Database Setup (Supabase)
+1. Initialize a new project on [Supabase Console](https://supabase.com/).
+2. Navigate to the SQL Editor and apply the migration files located in `supabase/migrations/` to construct the tables (`users`, `health_records`, `risk_predictions`, `ai_reports`, `chat_history`).
+3. Ensure that the database level trigger synchronizes `auth.users` additions into `public.users` using the correct UUID layout.
+
+### 2. Machine Learning API Deployment (Render / Docker)
+The ML API can be deployed on Render as a Python Web Service.
+
+- **Build Command**: `pip install -r ml-api/requirements.txt && python ml-api/train/train_diabetes.py && python ml-api/train/train_heart.py && python ml-api/train/train_stroke.py && python ml-api/train/train_bmi.py`
+- **Start Command**: `uvicorn ml-api.main:app --host 0.0.0.0 --port $PORT`
+- **Environment Variables**:
+  - `PORT`: `8000` (Render will set this dynamically)
+  - `ALLOWED_ORIGINS`: `*` (or your backend/frontend service URLs)
+
+#### Docker Option:
+You can build and deploy the container using the provided `ml-api/Dockerfile`:
+```bash
+docker build -t healthguard-ml-api ./ml-api
+docker run -p 8000:8000 healthguard-ml-api
+```
+
+### 3. Node.js Backend Gateway Deployment (Render)
+The Node.js backend acts as the secure API Gateway communicating with Supabase and FastAPI.
+
+- **Build Command**: `npm install --prefix backend`
+- **Start Command**: `npm start --prefix backend`
+- **Environment Variables**:
+  - `PORT`: `5000`
+  - `NODE_ENV`: `production`
+  - `SUPABASE_URL`: (Your Supabase project URL)
+  - `SUPABASE_ANON_KEY`: (Your Supabase anon public key)
+  - `GOOGLE_API_KEY`: (Your Gemini API Key)
+  - `CLIENT_URL`: (Your deployed Vercel frontend URL)
+
+### 4. React Frontend Deployment (Vercel)
+The frontend UI compiles as a static SPA and is best deployed on Vercel.
+
+- **Framework Preset**: `Vite`
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
+- **Environment Variables**:
+  - `VITE_SUPABASE_URL`: (Your Supabase project URL)
+  - `VITE_SUPABASE_ANON_KEY`: (Your Supabase anon key)
+  - `VITE_API_URL`: (Your deployed Express backend URL, e.g., `https://your-backend.onrender.com/api`)

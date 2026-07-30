@@ -1,0 +1,32 @@
+services:
+  # 1. Machine Learning API Service (FastAPI)
+  - type: web
+    name: healthguard-ml-api
+    env: python
+    buildCommand: pip install -r ml-api/requirements.txt && python ml-api/train/train_diabetes.py && python ml-api/train/train_heart.py && python ml-api/train/train_stroke.py && python ml-api/train/train_bmi.py
+    startCommand: uvicorn ml-api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: ALLOWED_ORIGINS
+        value: "*"
+
+  # 2. Node.js Gateway Backend Service (Express)
+  - type: web
+    name: healthguard-backend
+    env: node
+    buildCommand: npm install --prefix backend
+    startCommand: npm start --prefix backend
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: CLIENT_URL
+        value: https://healthguard-ai.vercel.app

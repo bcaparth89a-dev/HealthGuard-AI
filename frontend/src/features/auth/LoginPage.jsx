@@ -6,6 +6,29 @@ import useAuth from '../../hooks/useAuth';
 import Card, { CardContent } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import supabase from '../../lib/supabase';
+
+const getFriendlyErrorMessage = (error) => {
+  if (!error) return 'Operation failed. Please try again.';
+  const msg = String(error.message || error).toLowerCase();
+  
+  if (msg.includes('rate limit') || msg.includes('429')) {
+    return 'Too many signup or sign-in attempts. Please wait a few minutes before trying again.';
+  }
+  if (msg.includes('invalid login credentials') || msg.includes('invalid credentials')) {
+    return 'Incorrect email or password. Please verify your details.';
+  }
+  if (msg.includes('email_not_confirmed') || msg.includes('email not confirmed') || msg.includes('verified') || msg.includes('confirm your email') || msg.includes('email confirmation')) {
+    return 'Email verification required. Please check your inbox and verify your email address to log in.';
+  }
+  if (msg.includes('user already exists') || msg.includes('already registered')) {
+    return 'This email address is already registered. Please log in instead.';
+  }
+  if (msg.includes('network') || msg.includes('fetch') || msg.includes('connection')) {
+    return 'Network connection error. Please verify your internet connectivity.';
+  }
+  return error.message || 'An unexpected authentication error occurred.';
+};
 
 export const LoginPage = () => {
   const { login, register: signUp, forgotPassword } = useAuth();
@@ -39,16 +62,26 @@ export const LoginPage = () => {
         await login(data.email, data.password);
         navigate('/');
       } else if (mode === 'signup') {
-        await signUp(data.name, data.email, data.password);
-        setSuccessMsg('Account registered successfully! Please check your email to verify your session details.');
-        reset();
+        const user = await signUp(data.name, data.email, data.password);
+        
+        // Detect if email confirmation is disabled (which auto-creates active session)
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (sessionData?.session) {
+          setSuccessMsg('Account registered successfully! Redirecting to dashboard...');
+          setTimeout(() => {
+            navigate('/');
+          }, 1500);
+        } else {
+          setSuccessMsg('Account registered successfully! A verification link has been sent to your email. Please verify your email before logging in.');
+          reset();
+        }
       } else if (mode === 'forgot') {
         await forgotPassword(data.email);
         setSuccessMsg('Password recovery link has been dispatched to your email address.');
         reset();
       }
     } catch (error) {
-      setApiError(error.message || 'Operation failed. Please check parameters and try again.');
+      setApiError(getFriendlyErrorMessage(error));
     } finally {
       setLoading(false);
     }

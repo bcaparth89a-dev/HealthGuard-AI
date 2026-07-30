@@ -9,6 +9,13 @@ const SymptomCheckerPage = lazy(() => import('../features/symptom-checker/Sympto
 const MlPredictorPage = lazy(() => import('../features/ml-predictor/MlPredictorPage'));
 const MedicalRecordsPage = lazy(() => import('../features/medical-records/MedicalRecordsPage'));
 const LoginPage = lazy(() => import('../features/auth/LoginPage'));
+const HealthAssessmentPage = lazy(() => import('../features/health-assessment/HealthAssessmentPage'));
+const PatientRecordsPage = lazy(() => import('../features/patient-records/PatientRecordsPage'));
+const PatientProfilePage = lazy(() => import('../features/patient-records/PatientProfilePage'));
+const MedicalReportsPage = lazy(() => import('../features/patient-records/MedicalReportsPage'));
+const AnalyticsPage = lazy(() => import('../features/patient-records/AnalyticsPage'));
+const SettingsPage = lazy(() => import('../features/patient-records/SettingsPage'));
+const TeamProfile = lazy(() => import('../pages/TeamProfile'));
 
 // Route guard requiring authenticated user contexts
 const RequireAuth = ({ children }) => {
@@ -79,6 +86,46 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'family-members',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <DashboardPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'family-members/:patientId',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PatientProfilePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'reports',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <MedicalReportsPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'analytics',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <AnalyticsPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'settings',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <SettingsPage />
+          </Suspense>
+        ),
+      },
+      {
         path: 'symptoms',
         element: (
           <Suspense fallback={<PageLoader />}>
@@ -99,6 +146,38 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<PageLoader />}>
             <MedicalRecordsPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'assessment',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <HealthAssessmentPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'patient-records',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <DashboardPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'patient-records/:patientId',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <PatientProfilePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'team/:developerId',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <TeamProfile />
           </Suspense>
         ),
       },

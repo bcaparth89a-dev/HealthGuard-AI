@@ -42,3 +42,18 @@ ENV/
 
 # Supabase Local DB logs and files
 .supabase/
+
+# Scratch & Temporary Scripts
+/backend/scratch/
+
+# Large Data & Archive files
+*.zip
+*.csv
+/Diabities/
+/Heart Problems/
+/Stroke/
+/diabetes_012_health_indicators_BRFSS2015.csv/
+/backend/src/data/*.csv
+
+# Trained Machine Learning models
+/ml-api/models/*.pkl
