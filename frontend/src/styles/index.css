@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply text-slate-800 bg-slate-50;
+    @apply text-slate-800 bg-slate-50 dark:text-slate-100 dark:bg-slate-900 transition-colors duration-200;
   }
 }
 
@@ -19,10 +19,19 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 rounded-full hover:bg-slate-300;
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600;
 }
 
 /* Recharts customization variables styling */
 .recharts-default-tooltip {
-  @apply rounded-xl border border-slate-100 bg-white/90 backdrop-blur-md shadow-premium !important;
+  @apply rounded-xl border border-slate-100 dark:border-slate-700 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md shadow-premium text-slate-800 dark:text-slate-200 !important;
+}
+
+/* Glassmorphism custom classes */
+.glass {
+  @apply bg-white/70 dark:bg-slate-800/70 border border-white/20 dark:border-slate-700/30 backdrop-blur-md;
+}
+
+.glass-header {
+  @apply bg-white/80 dark:bg-slate-900/80 border-b border-slate-100 dark:border-slate-800/50 backdrop-blur-md;
 }

@@ -318,16 +318,16 @@ export const HealthAssessmentPage = () => {
       </AnimatePresence>
 
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
-          <Clipboard className="text-teal-600 animate-pulse" size={24} />
+        <h1 className="text-2xl font-bold tracking-tight text-slate-805 dark:text-slate-100 flex items-center gap-2">
+          <Clipboard className="text-teal-600 dark:text-teal-400 animate-pulse" size={24} />
           Baseline Health Assessment
         </h1>
-        <p className="text-sm text-slate-500">Record diagnostics baselines and active complaints.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Record diagnostics baselines and active complaints.</p>
       </div>
 
       {/* Steps Progress Indicator */}
       {step > 0 && (
-        <div className="grid grid-cols-4 gap-4 p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+        <div className="grid grid-cols-4 gap-4 p-4 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 rounded-2xl shadow-sm transition-colors duration-200">
           {stepsMeta.map((s, idx) => {
             const stepNum = idx + 1;
             const isCompleted = step > stepNum;
@@ -340,18 +340,18 @@ export const HealthAssessmentPage = () => {
                       ? 'bg-teal-600 text-white' 
                       : isActive 
                       ? 'bg-indigo-600 text-white' 
-                      : 'bg-slate-100 text-slate-400'
+                      : 'bg-slate-100 dark:bg-slate-900 text-slate-400 dark:text-slate-500'
                   }`}>
                     {isCompleted ? <Check size={12} /> : stepNum}
                   </div>
                   <span className={`text-xs font-semibold hidden md:inline truncate ${
-                    isActive ? 'text-indigo-600' : 'text-slate-500'
+                    isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400'
                   }`}>
                     {s.label}
                   </span>
                 </div>
                 <div className={`h-1 w-full rounded-full ${
-                  isCompleted ? 'bg-teal-600' : isActive ? 'bg-indigo-600' : 'bg-slate-100'
+                  isCompleted ? 'bg-teal-600' : isActive ? 'bg-indigo-600' : 'bg-slate-100 dark:bg-slate-900'
                 }`} />
               </div>
             );
@@ -374,21 +374,21 @@ export const HealthAssessmentPage = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-6 py-4"
                 >
-                  <div className="border-b border-slate-150 pb-4 text-center">
+                  <div className="border-b border-slate-100 dark:border-slate-800 pb-4 text-center">
                     <Users className="h-10 w-10 text-teal-600 mx-auto mb-2 animate-bounce" />
-                    <h3 className="text-md font-bold text-slate-800">Select EMR Patient Profile</h3>
-                    <p className="text-xs text-slate-400">Evaluate a registered family member or return to add a new profile.</p>
+                    <h3 className="text-md font-bold text-slate-800 dark:text-slate-100">Select EMR Patient Profile</h3>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">Evaluate a registered family member or return to add a new profile.</p>
                   </div>
 
                   <div className="max-w-md mx-auto space-y-4">
                     <div className="flex flex-col gap-1.5 w-full">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <label className="text-xs font-bold text-slate-505 dark:text-slate-400 uppercase tracking-wider">
                         Patient Profile
                       </label>
                       <select
                         value={selectedMemberId}
                         onChange={(e) => setSelectedMemberId(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 transition-all outline-none text-xs font-bold"
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-805 dark:text-white transition-all outline-none text-xs font-bold"
                       >
                         <option value="">-- Select Family Member --</option>
                         {familyMembers.map(m => (
@@ -478,8 +478,8 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="gender"
-                        className={`w-full px-4 py-2.5 rounded-xl border bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm ${
-                          errors.gender ? 'border-red-400' : 'border-slate-200'
+                        className={`w-full px-4 py-2.5 rounded-xl border bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all outline-none text-sm ${
+                          errors.gender ? 'border-red-400 dark:border-red-400' : 'border-slate-200 dark:border-slate-700'
                         }`}
                         {...register('gender', { required: 'Gender selection is required.' })}
                       >
@@ -539,7 +539,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="blood_group"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all outline-none text-sm"
                         {...register('blood_group')}
                       >
                         <option value="">Select Blood Group</option>
@@ -595,7 +595,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="exercise"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all outline-none text-sm"
                         {...register('exercise')}
                       >
                         <option value="None">None</option>
@@ -611,7 +611,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="smoking"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all outline-none text-sm"
                         {...register('smoking')}
                       >
                         <option value="No">No</option>
@@ -626,7 +626,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="alcohol"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all outline-none text-sm"
                         {...register('alcohol')}
                       >
                         <option value="No">No</option>
@@ -659,7 +659,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="food_preference"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-805 dark:text-white transition-all outline-none text-sm"
                         {...register('food_preference')}
                       >
                         <option value="Veg">Vegetarian</option>
@@ -684,7 +684,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="fast_food"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all outline-none text-sm"
                         {...register('fast_food')}
                       >
                         <option value="Rarely">Rarely</option>
@@ -699,7 +699,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="sugary_drinks"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-808 dark:text-white transition-all outline-none text-sm"
                         {...register('sugary_drinks')}
                       >
                         <option value="Rarely">Rarely</option>
@@ -716,7 +716,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="stress"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-808 dark:text-white transition-all outline-none text-sm"
                         {...register('stress')}
                       >
                         <option value="Low">Low</option>
@@ -739,7 +739,7 @@ export const HealthAssessmentPage = () => {
                       </label>
                       <select
                         id="diet"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-808 dark:text-white transition-all outline-none text-sm"
                         {...register('diet')}
                       >
                         <option value="Balanced">Balanced Diet</option>
@@ -808,19 +808,19 @@ export const HealthAssessmentPage = () => {
                       <textarea
                         id="known_diseases"
                         placeholder="e.g. Hypertension, Asthma"
-                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm focus:border-brand-500"
+                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-808 dark:text-white transition-all outline-none text-sm focus:border-brand-500"
                         {...register('known_diseases')}
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5 w-full">
-                      <label htmlFor="current_medicines" className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                      <label htmlFor="current_medicines" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         Current Medications
                       </label>
                       <textarea
                         id="current_medicines"
                         placeholder="e.g. Lisinopril 10mg once daily"
-                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm focus:border-brand-500"
+                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-808 dark:text-white transition-all outline-none text-sm focus:border-brand-500"
                         {...register('current_medicines')}
                       />
                     </div>
@@ -828,25 +828,25 @@ export const HealthAssessmentPage = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div className="flex flex-col gap-1.5 w-full">
-                      <label htmlFor="allergies" className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                      <label htmlFor="allergies" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         Allergies
                       </label>
                       <textarea
                         id="allergies"
                         placeholder="e.g. Penicillin, Peanuts"
-                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm focus:border-brand-500"
+                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-808 dark:text-white transition-all outline-none text-sm focus:border-brand-500"
                         {...register('allergies')}
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5 w-full">
-                      <label htmlFor="family_history" className="text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                      <label htmlFor="family_history" className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
                         Family Medical History
                       </label>
                       <textarea
                         id="family_history"
                         placeholder="e.g. Father has Heart Disease, Mother has Type-2 Diabetes"
-                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm focus:border-brand-500"
+                        className="w-full min-h-[80px] px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-808 dark:text-white transition-all outline-none text-sm focus:border-brand-500"
                         {...register('family_history')}
                       />
                     </div>
@@ -859,10 +859,10 @@ export const HealthAssessmentPage = () => {
                     <textarea
                       id="symptoms"
                       placeholder="I have headache, chest pain and dizziness for the last 3 days..."
-                      className={`w-full min-h-[100px] px-4 py-3 rounded-xl border bg-white/50 focus:bg-white text-slate-800 transition-all outline-none text-sm focus:ring-1 ${
+                      className={`w-full min-h-[100px] px-4 py-3 rounded-xl border bg-white/50 dark:bg-slate-900/50 focus:bg-white dark:focus:bg-slate-900 text-slate-800 dark:text-white transition-all outline-none text-sm focus:ring-1 ${
                         errors.symptoms 
-                          ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20' 
-                          : 'border-slate-200 focus:border-brand-500 focus:ring-brand-500/20'
+                          ? 'border-red-400 dark:border-red-400 focus:border-red-500 focus:ring-red-500/20' 
+                          : 'border-slate-200 dark:border-slate-700 focus:border-brand-500 focus:ring-brand-500/20'
                       }`}
                       {...register('symptoms', { 
                         required: 'Symptom log descriptions are required.' 

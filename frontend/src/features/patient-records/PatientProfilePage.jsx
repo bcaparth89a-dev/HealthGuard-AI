@@ -131,10 +131,14 @@ export const PatientProfilePage = () => {
   const latestRisk = latestReport ? (latestReport.overall_risk || 'Low') : 'N/A';
 
   const getRiskColor = (risk) => {
-    if (risk === 'Low' || risk === 'Normal') return 'bg-emerald-50 text-emerald-700 border-emerald-100';
-    if (risk === 'Moderate') return 'bg-amber-50 text-amber-700 border-amber-100';
-    return 'bg-rose-50 text-rose-700 border-rose-100';
+    if (risk === 'Low' || risk === 'Normal') return 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30';
+    if (risk === 'Moderate') return 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30';
+    return 'bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30';
   };
+
+  const isDark = document.documentElement.classList.contains('dark');
+  const gridColor = isDark ? '#334155' : '#f1f5f9';
+  const labelColor = isDark ? '#94a3b8' : '#64748b';
 
   // Compile trend analytics data (chronological order)
   const trendData = [...patientReports]
@@ -355,9 +359,9 @@ export const PatientProfilePage = () => {
                   <CardContent className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} domain={[0, 100]} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                        <XAxis dataKey="date" stroke={labelColor} fontSize={10} tickLine={false} />
+                        <YAxis stroke={labelColor} fontSize={10} tickLine={false} domain={[0, 100]} />
                         <Tooltip />
                         <Line type="monotone" dataKey="healthScore" stroke="#0d9488" strokeWidth={2.5} activeDot={{ r: 6 }} name="Health Index" />
                       </LineChart>
@@ -373,9 +377,9 @@ export const PatientProfilePage = () => {
                   <CardContent className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                        <XAxis dataKey="date" stroke={labelColor} fontSize={10} tickLine={false} />
+                        <YAxis stroke={labelColor} fontSize={10} tickLine={false} />
                         <Tooltip />
                         <Area type="monotone" dataKey="bmi" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.1} strokeWidth={2} name="BMI (kg/m²)" />
                       </AreaChart>
@@ -395,9 +399,9 @@ export const PatientProfilePage = () => {
                   <CardContent className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                        <XAxis dataKey="date" stroke={labelColor} fontSize={10} tickLine={false} />
+                        <YAxis stroke={labelColor} fontSize={10} tickLine={false} />
                         <Tooltip />
                         <Line type="monotone" dataKey="weight" stroke="#10b981" strokeWidth={2.5} name="Weight" />
                       </LineChart>
@@ -413,9 +417,9 @@ export const PatientProfilePage = () => {
                   <CardContent className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                        <XAxis dataKey="date" stroke={labelColor} fontSize={10} tickLine={false} />
+                        <YAxis stroke={labelColor} fontSize={10} tickLine={false} />
                         <Tooltip />
                         <Line type="monotone" dataKey="bloodPressure" stroke="#ef4444" strokeWidth={2.5} name="BP Systolic" />
                       </LineChart>
@@ -435,9 +439,9 @@ export const PatientProfilePage = () => {
                   <CardContent className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                        <XAxis dataKey="date" stroke={labelColor} fontSize={10} tickLine={false} />
+                        <YAxis stroke={labelColor} fontSize={10} tickLine={false} />
                         <Tooltip />
                         <Line type="monotone" dataKey="bloodSugar" stroke="#f59e0b" strokeWidth={2.5} name="Glucose (mg/dL)" />
                       </LineChart>
@@ -453,9 +457,9 @@ export const PatientProfilePage = () => {
                   <CardContent className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                        <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                        <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} />
+                        <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                        <XAxis dataKey="date" stroke={labelColor} fontSize={10} tickLine={false} />
+                        <YAxis stroke={labelColor} fontSize={10} tickLine={false} />
                         <Tooltip />
                         <Line type="monotone" dataKey="heartRisk" stroke="#dc2626" strokeWidth={2.5} name="Heart Risk %" />
                       </LineChart>
@@ -473,9 +477,9 @@ export const PatientProfilePage = () => {
                 <CardContent className="h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={10} tickLine={false} />
-                      <YAxis stroke="#94a3b8" fontSize={10} tickLine={false} domain={[0, 100]} />
+                      <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                      <XAxis dataKey="date" stroke={labelColor} fontSize={10} tickLine={false} />
+                      <YAxis stroke={labelColor} fontSize={10} tickLine={false} domain={[0, 100]} />
                       <Tooltip />
                       <Legend />
                       <Line type="monotone" dataKey="diabetesRisk" stroke="#f59e0b" strokeWidth={2} name="Diabetes Risk" />

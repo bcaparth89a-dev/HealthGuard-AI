@@ -144,50 +144,50 @@ export const MlPredictorPage = () => {
   }
 
   return (
-    <div className="space-y-8 max-w-4xl mx-auto">
+    <div className="space-y-8 max-w-4xl mx-auto transition-colors duration-200">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-2">
           <Sparkles className="text-accent-500" size={24} />
           AI Diagnostic Predictor
         </h1>
-        <p className="text-sm text-slate-500">Run risk calculations based on your latest recorded baseline health assessment.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Run risk calculations based on your latest recorded baseline health assessment.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Baseline Record Details */}
         <div className="md:col-span-1 space-y-6">
           <Card>
-            <CardHeader className="pb-2 border-b border-slate-50 mb-4">
-              <CardTitle className="text-sm font-semibold uppercase tracking-wider text-slate-400">Baseline Assessment</CardTitle>
+            <CardHeader className="pb-2 border-b border-slate-50 dark:border-slate-700/50 mb-4">
+              <CardTitle className="text-sm font-semibold uppercase tracking-wider text-slate-405 dark:text-slate-500">Baseline Assessment</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-sm text-slate-600 font-medium">
-              <div className="flex justify-between py-1.5 border-b border-slate-50">
-                <span className="text-slate-400">Patient Age</span>
-                <span className="text-slate-800">{record.age} years</span>
+            <CardContent className="space-y-4 text-sm text-slate-605 dark:text-slate-350 font-medium">
+              <div className="flex justify-between py-1.5 border-b border-slate-50 dark:border-slate-700/40">
+                <span className="text-slate-400 dark:text-slate-500">Patient Age</span>
+                <span className="text-slate-800 dark:text-slate-200">{record.age} years</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-50">
-                <span className="text-slate-400">Gender</span>
-                <span className="text-slate-800">{record.gender}</span>
+              <div className="flex justify-between py-1.5 border-b border-slate-50 dark:border-slate-700/40">
+                <span className="text-slate-400 dark:text-slate-500">Gender</span>
+                <span className="text-slate-800 dark:text-slate-200">{record.gender}</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-50">
-                <span className="text-slate-400">Dimensions</span>
-                <span className="text-slate-800">{record.height}cm / {record.weight}kg</span>
+              <div className="flex justify-between py-1.5 border-b border-slate-50 dark:border-slate-700/40">
+                <span className="text-slate-400 dark:text-slate-500">Dimensions</span>
+                <span className="text-slate-800 dark:text-slate-200">{record.height}cm / {record.weight}kg</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-50">
-                <span className="text-slate-400">Calculated BMI</span>
-                <span className="text-slate-800">{record.bmi}</span>
+              <div className="flex justify-between py-1.5 border-b border-slate-50 dark:border-slate-700/40">
+                <span className="text-slate-400 dark:text-slate-500">Calculated BMI</span>
+                <span className="text-slate-800 dark:text-slate-200">{record.bmi}</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-50">
-                <span className="text-slate-400">Blood Pressure</span>
-                <span className="text-slate-800">{record.blood_pressure || '120/80'}</span>
+              <div className="flex justify-between py-1.5 border-b border-slate-50 dark:border-slate-700/40">
+                <span className="text-slate-400 dark:text-slate-500">Blood Pressure</span>
+                <span className="text-slate-800 dark:text-slate-200">{record.blood_pressure || '120/80'}</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-50">
-                <span className="text-slate-400">Blood Sugar</span>
-                <span className="text-slate-800">{record.blood_sugar ? `${record.blood_sugar} mg/dL` : 'Normal'}</span>
+              <div className="flex justify-between py-1.5 border-b border-slate-50 dark:border-slate-700/40">
+                <span className="text-slate-400 dark:text-slate-500">Blood Sugar</span>
+                <span className="text-slate-800 dark:text-slate-200">{record.blood_sugar ? `${record.blood_sugar} mg/dL` : 'Normal'}</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-slate-50">
-                <span className="text-slate-400">Exercise Habits</span>
-                <span className="text-slate-800">{record.exercise}</span>
+              <div className="flex justify-between py-1.5 border-b border-slate-50 dark:border-slate-700/40">
+                <span className="text-slate-400 dark:text-slate-500">Exercise Habits</span>
+                <span className="text-slate-800 dark:text-slate-200">{record.exercise}</span>
               </div>
 
               <div className="pt-2">
@@ -207,34 +207,34 @@ export const MlPredictorPage = () => {
         {/* Prediction Results */}
         <div className="md:col-span-2 space-y-6">
           {!showResult && mutation.isIdle && (
-            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center shadow-premium h-full">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 text-slate-400 mb-4 animate-pulse">
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 p-8 text-center shadow-premium h-full">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 dark:bg-slate-900 text-slate-400 dark:text-slate-500 mb-4 animate-pulse">
                 <TrendingUp size={24} />
               </div>
-              <h3 className="text-md font-bold text-slate-800">Waiting for Risk Calculation</h3>
-              <p className="mt-1 text-sm text-slate-500 max-w-sm">
+              <h3 className="text-md font-bold text-slate-800 dark:text-slate-100">Waiting for Risk Calculation</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-sm">
                 Click the 'Predict Health Risk' button to parse your parameters via the FastAPI scikit-learn server.
               </p>
             </div>
           )}
 
           {mutation.isPending && (
-            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center shadow-premium h-full">
-              <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-100 border-t-accent-500 mb-4" />
-              <h3 className="text-md font-bold text-slate-800">Processing Models...</h3>
-              <p className="mt-1 text-sm text-slate-500 max-w-sm">
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 p-8 text-center shadow-premium h-full">
+              <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-100 dark:border-slate-700 border-t-accent-500 mb-4" />
+              <h3 className="text-md font-bold text-slate-800 dark:text-slate-100">Processing Models...</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-sm">
                 Loading scikit-learn models and evaluating clinical risk parameters.
               </p>
             </div>
           )}
 
           {mutation.isError && (
-            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center shadow-premium h-full">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500 mb-4">
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800 p-8 text-center shadow-premium h-full">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/20 text-red-500 mb-4">
                 <AlertTriangle size={24} />
               </div>
-              <h3 className="text-md font-bold text-slate-800">FastAPI Server Connection Refused</h3>
-              <p className="mt-1 text-sm text-slate-500 max-w-sm">
+              <h3 className="text-md font-bold text-slate-800 dark:text-slate-100">FastAPI Server Connection Refused</h3>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-sm">
                 {mutation.error?.message || 'We could not connect to the ML engine running on localhost:8000. Verify the server is running.'}
               </p>
               <Button onClick={() => mutation.mutate()} variant="outline" className="mt-4">
@@ -246,17 +246,17 @@ export const MlPredictorPage = () => {
           {showResult && predictionData && (
             <div className="space-y-6 animate-fade-in">
               <Card>
-                <CardHeader className="flex-row justify-between items-center pb-4 border-b border-slate-50 mb-6">
+                <CardHeader className="flex-row justify-between items-center pb-4 border-b border-slate-50 dark:border-slate-700/50 mb-6">
                   <div>
                     <CardTitle>Health Risk Card</CardTitle>
-                    <p className="text-xs text-slate-400 font-medium">Diagnostic prediction summary report</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">Diagnostic prediction summary report</p>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-bold ${
                     predictionData.overallRisk === 'Low' 
-                      ? 'bg-emerald-50 text-emerald-700' 
+                      ? 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400' 
                       : predictionData.overallRisk === 'Moderate'
-                      ? 'bg-amber-50 text-amber-700'
-                      : 'bg-rose-50 text-rose-700'
+                      ? 'bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400'
+                      : 'bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400'
                   }`}>
                     Overall Risk: {predictionData.overallRisk}
                   </span>
@@ -266,7 +266,7 @@ export const MlPredictorPage = () => {
                   <div className="flex items-center justify-center">
                     <div className="relative flex items-center justify-center h-44 w-44">
                       <svg className="w-full h-full transform -rotate-90">
-                        <circle cx="88" cy="88" r="74" stroke="#f1f5f9" strokeWidth="10" fill="transparent" />
+                        <circle cx="88" cy="88" r="74" className="stroke-slate-100 dark:stroke-slate-700" strokeWidth="10" fill="transparent" />
                         <circle cx="88" cy="88" r="74" stroke="#8b5cf6" strokeWidth="10" fill="transparent"
                           strokeDasharray={2 * Math.PI * 74}
                           strokeDashoffset={2 * Math.PI * 74 * (1 - predictionData.healthScore / 100)}
@@ -274,8 +274,8 @@ export const MlPredictorPage = () => {
                         />
                       </svg>
                       <div className="absolute flex flex-col items-center">
-                        <span className="text-4xl font-extrabold text-slate-800">{predictionData.healthScore}</span>
-                        <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Health Index</span>
+                        <span className="text-4xl font-extrabold text-slate-800 dark:text-white">{predictionData.healthScore}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">Health Index</span>
                       </div>
                     </div>
                   </div>
@@ -284,11 +284,11 @@ export const MlPredictorPage = () => {
                   <div className="flex flex-col justify-center gap-4">
                     {/* Cardio */}
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
                         <span>Cardiovascular Risk</span>
-                        <span className="text-slate-800">{predictionData.cardioRisk}%</span>
+                        <span className="text-slate-800 dark:text-slate-200">{predictionData.cardioRisk}%</span>
                       </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-750 h-2 rounded-full overflow-hidden">
                         <div 
                           className="bg-red-400 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${predictionData.cardioRisk}%` }}
@@ -298,11 +298,11 @@ export const MlPredictorPage = () => {
 
                     {/* Diabetes */}
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
                         <span>Diabetes Risk</span>
-                        <span className="text-slate-800">{predictionData.diabetesRisk}%</span>
+                        <span className="text-slate-800 dark:text-slate-200">{predictionData.diabetesRisk}%</span>
                       </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-750 h-2 rounded-full overflow-hidden">
                         <div 
                           className="bg-amber-400 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${predictionData.diabetesRisk}%` }}
@@ -312,11 +312,11 @@ export const MlPredictorPage = () => {
 
                     {/* Stroke */}
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
                         <span>Stroke Risk</span>
-                        <span className="text-slate-800">{predictionData.strokeRisk}%</span>
+                        <span className="text-slate-800 dark:text-slate-200">{predictionData.strokeRisk}%</span>
                       </div>
-                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-750 h-2 rounded-full overflow-hidden">
                         <div 
                           className="bg-blue-400 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${predictionData.strokeRisk}%` }}
@@ -329,34 +329,34 @@ export const MlPredictorPage = () => {
 
               {/* AI Report Section */}
               <Card>
-                <CardHeader className="pb-2 border-b border-slate-50 mb-4">
+                <CardHeader className="pb-2 border-b border-slate-50 dark:border-slate-700/50 mb-4">
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Sparkles size={18} className="text-accent-500" />
                       AI Health Report
                     </CardTitle>
-                    <p className="text-xs text-slate-400 font-medium">Professional hospital-style report generated by Gemini</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500 font-medium">Professional hospital-style report generated by Gemini</p>
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {isReportLoading ? (
                     <div className="flex flex-col items-center justify-center py-6">
-                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-100 border-t-accent-500 mb-2" />
-                      <p className="text-xs text-slate-500">Checking report status...</p>
+                      <div className="h-6 w-6 animate-spin rounded-full border-2 border-slate-100 dark:border-slate-750 border-t-accent-500 mb-2" />
+                      <p className="text-xs text-slate-500 dark:text-slate-450">Checking report status...</p>
                     </div>
                   ) : aiReport ? (
-                    <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-between items-center bg-slate-50 dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
                       <div className="text-left">
-                        <p className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                           <CheckCircle size={16} className="text-emerald-500" />
                           AI Report Ready
                         </p>
-                        <p className="text-xs text-slate-400 mt-1 font-medium">ID: {aiReport.id.substring(0, 15)}...</p>
+                        <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 font-medium">ID: {aiReport.id.substring(0, 15)}...</p>
                       </div>
                       <div className="flex gap-2">
                         <Button 
                           onClick={() => setIsReportOpen(true)}
-                          className="px-4 py-2 text-xs font-bold bg-white text-slate-700 hover:bg-slate-50 border border-slate-200 shadow-sm rounded-xl gap-1.5 animate-fade-in"
+                          className="px-4 py-2 text-xs font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 shadow-sm rounded-xl gap-1.5 animate-fade-in"
                         >
                           <FileText size={14} />
                           Preview Report
@@ -377,9 +377,9 @@ export const MlPredictorPage = () => {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center text-center p-6 bg-slate-50 border border-slate-100 rounded-2xl">
-                      <p className="text-sm text-slate-600 font-bold">No AI Health Report Found</p>
-                      <p className="text-xs text-slate-400 mt-1 max-w-sm font-medium">Generate your personalized AI clinical analysis and dynamic health reports now.</p>
+                    <div className="flex flex-col items-center justify-center text-center p-6 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl">
+                      <p className="text-sm text-slate-650 dark:text-slate-300 font-bold">No AI Health Report Found</p>
+                      <p className="text-xs text-slate-400 dark:text-slate-500 mt-1 max-w-sm font-medium">Generate your personalized AI clinical analysis and dynamic health reports now.</p>
                       <Button 
                         onClick={() => generateReportMutation.mutate()}
                         loading={generateReportMutation.isPending}

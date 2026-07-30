@@ -8,7 +8,7 @@ export const Card = ({
   onClick,
   ...props
 }) => {
-  const baseStyles = 'bg-white rounded-2xl border border-slate-100 shadow-premium p-6 overflow-hidden';
+  const baseStyles = 'bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700/50 shadow-premium p-6 overflow-hidden transition-colors duration-200';
   
   if (animate) {
     return (
@@ -27,7 +27,7 @@ export const Card = ({
   return (
     <div 
       onClick={onClick}
-      className={`${baseStyles} ${onClick ? 'cursor-pointer hover:border-slate-200' : ''} ${className}`} 
+      className={`${baseStyles} ${onClick ? 'cursor-pointer hover:border-slate-200 dark:hover:border-slate-600' : ''} ${className}`} 
       {...props}
     >
       {children}
@@ -36,19 +36,19 @@ export const Card = ({
 };
 
 export const CardHeader = ({ children, className = '' }) => (
-  <div className={`flex flex-col gap-1 pb-4 border-b border-slate-50 mb-4 ${className}`}>
+  <div className={`flex flex-col gap-1 pb-4 border-b border-slate-50 dark:border-slate-700/50 mb-4 ${className}`}>
     {children}
   </div>
 );
 
 export const CardTitle = ({ children, className = '' }) => (
-  <h3 className={`text-lg font-bold text-slate-800 tracking-tight ${className}`}>
+  <h3 className={`text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight ${className}`}>
     {children}
   </h3>
 );
 
 export const CardContent = ({ children, className = '' }) => (
-  <div className={`${className}`}>{children}</div>
+  <div className={`text-slate-600 dark:text-slate-350 ${className}`}>{children}</div>
 );
 
 export default Card;
