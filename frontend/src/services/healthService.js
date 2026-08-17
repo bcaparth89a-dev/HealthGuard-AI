@@ -75,51 +75,14 @@ export const healthService = {
       height: assessmentData.height ? parseFloat(assessmentData.height) : null,
       weight: assessmentData.weight ? parseFloat(assessmentData.weight) : null,
       bmi: assessmentData.bmi ? parseFloat(assessmentData.bmi) : null,
-      blood_group: assessmentData.blood_group || null,
-      city: assessmentData.city,
-      state: assessmentData.state,
       exercise: assessmentData.exercise,
       smoking: toBoolean(assessmentData.smoking),
       alcohol: toBoolean(assessmentData.alcohol),
-      sleep: assessmentData.sleep ? parseFloat(assessmentData.sleep) : null,
-      water_intake: assessmentData.water_intake ? parseFloat(assessmentData.water_intake) : null,
-      food_preference: assessmentData.food_preference || null,
-      occupation: assessmentData.occupation || null,
-      fast_food: assessmentData.fast_food || null,
-      sugary_drinks: assessmentData.sugary_drinks || null,
-      stress: assessmentData.stress || null,
-      screen_time: assessmentData.screen_time ? parseFloat(assessmentData.screen_time) : null,
-      fruit_intake: assessmentData.fruit_intake || null,
-      vegetable_intake: assessmentData.vegetable_intake || null,
-      physical_activity: assessmentData.physical_activity || null,
-      diet: assessmentData.diet || null,
       blood_pressure: assessmentData.blood_pressure,
       blood_sugar: assessmentData.blood_sugar ? parseFloat(assessmentData.blood_sugar) : null,
       cholesterol: assessmentData.cholesterol ? parseFloat(assessmentData.cholesterol) : null,
       heart_rate: assessmentData.heart_rate ? parseFloat(assessmentData.heart_rate) : null,
-      known_diseases: assessmentData.known_diseases || null,
-      medications: assessmentData.current_medicines || assessmentData.medications,
-      allergies: assessmentData.allergies,
-      family_history: assessmentData.family_history,
-      symptoms: assessmentData.symptoms,
-      // Optional laboratory & vitals metrics
-      temperature: assessmentData.temperature ? parseFloat(assessmentData.temperature) : null,
-      respiratory_rate: assessmentData.respiratory_rate ? parseInt(assessmentData.respiratory_rate, 10) : null,
-      spo2: assessmentData.spo2 ? parseInt(assessmentData.spo2, 10) : null,
-      waist_circumference: assessmentData.waist_circumference ? parseFloat(assessmentData.waist_circumference) : null,
-      hip_circumference: assessmentData.hip_circumference ? parseFloat(assessmentData.hip_circumference) : null,
-      hba1c: assessmentData.hba1c ? parseFloat(assessmentData.hba1c) : null,
-      ldl: assessmentData.ldl ? parseFloat(assessmentData.ldl) : null,
-      hdl: assessmentData.hdl ? parseFloat(assessmentData.hdl) : null,
-      triglycerides: assessmentData.triglycerides ? parseFloat(assessmentData.triglycerides) : null,
-      creatinine: assessmentData.creatinine ? parseFloat(assessmentData.creatinine) : null,
-      egfr: assessmentData.egfr ? parseFloat(assessmentData.egfr) : null,
-      ast: assessmentData.ast ? parseFloat(assessmentData.ast) : null,
-      alt: assessmentData.alt ? parseFloat(assessmentData.alt) : null,
-      uric_acid: assessmentData.uric_acid ? parseFloat(assessmentData.uric_acid) : null,
-      hemoglobin: assessmentData.hemoglobin ? parseFloat(assessmentData.hemoglobin) : null,
-      vitamin_d: assessmentData.vitamin_d ? parseFloat(assessmentData.vitamin_d) : null,
-      vitamin_b12: assessmentData.vitamin_b12 ? parseFloat(assessmentData.vitamin_b12) : null
+      symptoms: assessmentData.symptoms
     };
 
     const tableName = 'health_records';
@@ -159,13 +122,7 @@ export const healthService = {
             smoking: dbPayload.smoking,
             alcohol: dbPayload.alcohol,
             exercise: dbPayload.exercise,
-            sleep: dbPayload.sleep,
-            family_history: dbPayload.family_history,
-            city: dbPayload.city,
-            state: dbPayload.state,
-            symptoms: dbPayload.symptoms,
-            medications: dbPayload.medications,
-            allergies: dbPayload.allergies
+            symptoms: dbPayload.symptoms
           };
           const { data: retryData, error: retryError } = await supabase
             .from(tableName)

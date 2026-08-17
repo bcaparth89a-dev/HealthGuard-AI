@@ -264,11 +264,7 @@ export const PatientProfilePage = () => {
                 <CardHeader className="pb-2 border-b border-slate-50">
                   <CardTitle className="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Lifestyle Profile</CardTitle>
                 </CardHeader>
-                <CardContent className="p-4 text-xs space-y-2 font-semibold text-slate-600">
-                  <div className="flex justify-between border-b border-slate-50 pb-1">
-                    <span className="text-slate-400">Diet Preference</span>
-                    <span>{latestReport.lifestyle_info?.food_preference || 'Balanced'}</span>
-                  </div>
+                <CardContent className="p-4 text-xs space-y-2 font-semibold text-slate-650">
                   <div className="flex justify-between border-b border-slate-50 pb-1">
                     <span className="text-slate-400">Daily Exercise</span>
                     <span>{latestReport.lifestyle_info?.exercise || 'Moderate'}</span>
@@ -278,36 +274,8 @@ export const PatientProfilePage = () => {
                     <span>{latestReport.lifestyle_info?.smoking || 'No'}</span>
                   </div>
                   <div className="flex justify-between border-b border-slate-50 pb-1">
-                    <span className="text-slate-400">Alcohol load</span>
+                    <span className="text-slate-400">Alcohol Load</span>
                     <span>{latestReport.lifestyle_info?.alcohol || 'No'}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-50 pb-1">
-                    <span className="text-slate-400">Sleep (Hrs)</span>
-                    <span>{latestReport.lifestyle_info?.sleep || '8'} Hours</span>
-                  </div>
-                  <div className="flex justify-between border-b border-slate-50 pb-1">
-                    <span className="text-slate-400">Water Load</span>
-                    <span>{latestReport.lifestyle_info?.water_intake || '2'} Litres</span>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="pb-2 border-b border-slate-50">
-                  <CardTitle className="text-xs uppercase font-extrabold text-slate-400 tracking-wider">Active Medical History</CardTitle>
-                </CardHeader>
-                <CardContent className="p-4 text-xs space-y-2 font-semibold text-slate-650">
-                  <div>
-                    <span className="text-[9px] uppercase font-bold text-slate-400 block">Known Conditions</span>
-                    <p className="mt-0.5 text-slate-800">{latestReport.medical_history?.known_diseases || 'None reported'}</p>
-                  </div>
-                  <div className="pt-2 border-t border-slate-50">
-                    <span className="text-[9px] uppercase font-bold text-slate-400 block">Medications</span>
-                    <p className="mt-0.5 text-slate-800">{latestReport.medical_history?.current_medicines || 'None'}</p>
-                  </div>
-                  <div className="pt-2 border-t border-slate-50">
-                    <span className="text-[9px] uppercase font-bold text-slate-400 block">Allergies</span>
-                    <p className="mt-0.5 text-slate-800">{latestReport.medical_history?.allergies || 'No allergies recorded'}</p>
                   </div>
                 </CardContent>
               </Card>

@@ -79,8 +79,6 @@ export const MlPredictorPage = () => {
         exercise: record.exercise || 'Moderate',
         smoking: record.smoking || 'No',
         alcohol: record.alcohol || 'No',
-        sleep: parseFloat(record.sleep || '8'),
-        family_history: record.family_history || 'None',
         symptoms: record.symptoms || '',
       };
 

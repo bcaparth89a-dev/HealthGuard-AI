@@ -122,13 +122,6 @@ export const ReportPreviewModal = ({ isOpen, onClose, record, prediction, aiRepo
   if (bmi >= 18.5 && bmi < 25) {
     positiveFactors.push({ title: 'Normal BMI', desc: 'Body mass corresponds to standard height ratio.' });
   } else {
-    positiveFactors.push({ title: 'Standard Biomarker Tracking', desc: 'Baseline body height and weight records are regularly evaluated.' });
-  }
-  if (record.sleep >= 7) {
-    positiveFactors.push({ title: 'Healthy Sleep Duration', desc: 'Consistent sleep of 7-9 hours aids cognitive and muscle repair.' });
-  }
-  if (record.water_intake >= 2.5) {
-    positiveFactors.push({ title: 'Good Hydration', desc: 'Flushes metabolic waste and keeps kidneys operating efficiently.' });
   }
 
   // Priority Action Plan
@@ -362,36 +355,9 @@ export const ReportPreviewModal = ({ isOpen, onClose, record, prediction, aiRepo
                       <span className="text-slate-400 dark:text-slate-500 font-semibold">Alcohol Consuming Log</span>
                       <span className="text-slate-800 dark:text-slate-200 font-bold">{record.alcohol === true || record.alcohol === 'Yes' ? 'Yes' : 'No'}</span>
                     </div>
-                    <div className="flex justify-between p-3 border-b border-slate-50 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800/40">
+                    <div className="flex justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-800/40">
                       <span className="text-slate-400 dark:text-slate-500 font-semibold">Exercise Habit Level</span>
                       <span className="text-slate-800 dark:text-slate-200 font-bold">{record.exercise}</span>
-                    </div>
-                    <div className="flex justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <span className="text-slate-400 dark:text-slate-500 font-semibold">Sleep Duration & Water</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold">{record.sleep} hrs / {record.water_intake || 2}L</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Medical History */}
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2.5">4. Medical History Background</h4>
-                  <div className="border border-slate-100 dark:border-slate-800 rounded-2xl overflow-hidden text-xs">
-                    <div className="flex justify-between p-3 border-b border-slate-50 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <span className="text-slate-400 dark:text-slate-500 font-semibold">Known Chronic Diseases</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold truncate max-w-[120px]">{record.known_diseases || 'None'}</span>
-                    </div>
-                    <div className="flex justify-between p-3 border-b border-slate-50 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <span className="text-slate-400 dark:text-slate-500 font-semibold">Current Prescription Meds</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold truncate max-w-[120px]">{record.current_medicines || record.medications || 'None'}</span>
-                    </div>
-                    <div className="flex justify-between p-3 border-b border-slate-50 dark:border-slate-850 hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <span className="text-slate-400 dark:text-slate-500 font-semibold">Drug / Food Allergies</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold truncate max-w-[120px]">{record.allergies || 'None'}</span>
-                    </div>
-                    <div className="flex justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                      <span className="text-slate-400 dark:text-slate-500 font-semibold">Family Genetic History</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-bold truncate max-w-[120px]">{record.family_history || 'None'}</span>
                     </div>
                   </div>
                 </div>

@@ -10,28 +10,14 @@ import {
   AlertTriangle, 
   AlertCircle, 
   Sparkles, 
-  MapPin, 
   Dumbbell, 
-  Moon, 
   Brain, 
-  Calendar, 
-  Clock, 
   Download, 
   Printer, 
-  Share2, 
-  Flame, 
-  ThumbsUp,
-  Droplets,
-  PlusCircle,
-  FileText,
+  Compass, 
   Thermometer,
-  ShieldCheck,
-  Compass,
-  Phone,
-  Settings,
   Database,
-  Search,
-  Check
+  FileText
 } from 'lucide-react';
 import { 
   LineChart,
@@ -41,9 +27,7 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
-  AreaChart,
-  Area
+  Legend
 } from 'recharts';
 import healthService from '../../services/healthService';
 import { generatePdfReport } from '../../utils/reportGenerator';
@@ -52,14 +36,14 @@ import Button from '../../components/ui/Button';
 export const MedicalReportView = ({ report, user }) => {
   const reportId = typeof report === 'string' ? report : report?.id;
 
-  // 1. Fetch Complete EMR Data directly using React Query (Never depends on temporary state)
+  // 1. Fetch Complete EMR Data
   const { data: fullReport, isLoading, isError, error } = useQuery({
     queryKey: ['fullEmrReportDetails', reportId],
     queryFn: () => healthService.getReportById(reportId),
     enabled: !!reportId,
   });
 
-  // 2. Fetch sibling reports to plot local EMR historical trends
+  // 2. Fetch sibling reports to plot historical trends
   const memberId = fullReport?.member_id;
   const { data: siblingReports = [] } = useQuery({
     queryKey: ['emrSiblingReportsForView', memberId],
@@ -89,7 +73,6 @@ export const MedicalReportView = ({ report, user }) => {
   const {
     patient_info: pInfo = {},
     lifestyle = {},
-    medical_history: medHistory = {},
     symptoms_details: symInfo = {},
     vitals = {},
     lab_values: labs = {},
@@ -156,12 +139,6 @@ export const MedicalReportView = ({ report, user }) => {
       };
     });
 
-  const allLabsNotProvided = [
-    labs.hba1c, labs.ldl, labs.hdl, labs.triglycerides, 
-    labs.creatinine, labs.egfr, labs.ast, labs.alt, 
-    labs.uric_acid, labs.hemoglobin, labs.vitamin_d, labs.vitamin_b12
-  ].every(val => val === null || val === undefined || val === '' || val === 'Not Provided');
-
   const handleDownloadPdf = async () => {
     try {
       await generatePdfReport(fullReport, user);
@@ -180,7 +157,7 @@ export const MedicalReportView = ({ report, user }) => {
     positiveHabits.push('Non-Smoker: Zero active tobacco load.');
   }
   if (lifestyle.alcohol === 'No' || lifestyle.alcohol === false) {
-    positiveHabits.push('Non-Drinker: Minimal hepatocyte strain.');
+    positiveHabits.push('Non-Drinker: Minimal liver strain.');
   }
   if (pInfo.bmi && parseFloat(pInfo.bmi) >= 18.5 && parseFloat(pInfo.bmi) < 25) {
     positiveHabits.push('Healthy BMI: Body mass index meets target clinical baselines.');
@@ -195,9 +172,8 @@ export const MedicalReportView = ({ report, user }) => {
   if (lifestyle.smoking === 'Yes') clinicalRisks.push('Active Tobacco Smoking loads');
   if (lifestyle.alcohol === 'Yes') clinicalRisks.push('Alcohol consumption loads');
   if (vitals.blood_pressure && parseInt(vitals.blood_pressure.split('/')[0]) >= 130) clinicalRisks.push(`Hypertensive Systolic Blood Pressure: ${vitals.blood_pressure}`);
-  if (labs.random_blood_sugar && parseFloat(labs.random_blood_sugar) >= 100) clinicalRisks.push(`Hyperglycemia indicator: ${labs.random_blood_sugar} mg/dL`);
-  if (medHistory.family_history && medHistory.family_history !== 'None') clinicalRisks.push(`Genotypic history indicators: ${medHistory.family_history}`);
-  if (lifestyle.stress_level === 'High') clinicalRisks.push('Elevated Stress loads');
+  if (labs.blood_sugar && parseFloat(labs.blood_sugar) >= 100) clinicalRisks.push(`Elevated Blood Sugar indicator: ${labs.blood_sugar} mg/dL`);
+  if (labs.cholesterol && parseFloat(labs.cholesterol) >= 200) clinicalRisks.push(`Elevated Serum Cholesterol: ${labs.cholesterol} mg/dL`);
   
   if (clinicalRisks.length === 0) {
     clinicalRisks.push('Normal baseline profile risks.');
@@ -261,14 +237,6 @@ export const MedicalReportView = ({ report, user }) => {
               <span>{pInfo.gender}, {pInfo.age} Yrs</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-400">DOB:</span>
-              <span>{renderValue(pInfo.dob)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-400">Blood Group:</span>
-              <span>{renderValue(pInfo.blood_group)}</span>
-            </div>
-            <div className="flex justify-between">
               <span className="text-slate-400">Height:</span>
               <span>{renderValue(pInfo.height ? `${pInfo.height} cm` : null)}</span>
             </div>
@@ -313,7 +281,7 @@ export const MedicalReportView = ({ report, user }) => {
               <Thermometer size={14} className="text-teal-600" />
               1. EMR Baseline Vital Signs
             </h4>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-semibold text-slate-650">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs font-semibold text-slate-650">
               <div>
                 <span className="text-[9px] text-slate-400 uppercase font-bold block">Blood Pressure</span>
                 <span className="mt-0.5 block">{renderValue(vitals.blood_pressure)}</span>
@@ -323,28 +291,8 @@ export const MedicalReportView = ({ report, user }) => {
                 <span className="mt-0.5 block">{renderValue(vitals.heart_rate)}</span>
               </div>
               <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Body Temperature</span>
-                <span className="mt-0.5 block">{renderValue(vitals.temperature)}</span>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Respiratory Rate</span>
-                <span className="mt-0.5 block">{renderValue(vitals.respiratory_rate)}</span>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Oxygen Saturation (SpO2)</span>
-                <span className="mt-0.5 block">{renderValue(vitals.spo2)}</span>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Waist Circumference</span>
-                <span className="mt-0.5 block">{renderValue(vitals.waist_circumference)}</span>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Hip Circumference</span>
-                <span className="mt-0.5 block">{renderValue(vitals.hip_circumference)}</span>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Location (City/State)</span>
-                <span className="mt-0.5 block">{pInfo.city}, {pInfo.state}</span>
+                <span className="text-[9px] text-slate-400 uppercase font-bold block">Body Mass Index (BMI)</span>
+                <span className="mt-0.5 block">{renderValue(vitals.bmi)}</span>
               </div>
             </div>
           </div>
@@ -354,76 +302,22 @@ export const MedicalReportView = ({ report, user }) => {
       </div>
 
       {/* Lab Values investigations section */}
-      {!allLabsNotProvided && (
-        <div className="border border-slate-150 rounded-2xl p-5 bg-white">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-2 mb-4 flex items-center gap-1.5">
-            <Database size={14} className="text-teal-650" />
-            2. Laboratory Investigations Matrix
-          </h4>
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-5 text-xs font-semibold text-slate-650">
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Fasting Sugar</span>
-              <span className="mt-0.5 block">{renderValue(labs.fasting_blood_sugar)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Random Sugar</span>
-              <span className="mt-0.5 block">{renderValue(labs.random_blood_sugar)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">HbA1c Glycated</span>
-              <span className="mt-0.5 block">{renderValue(labs.hba1c)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Total Cholesterol</span>
-              <span className="mt-0.5 block">{renderValue(labs.cholesterol)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">LDL Cholesterol</span>
-              <span className="mt-0.5 block">{renderValue(labs.ldl)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">HDL Cholesterol</span>
-              <span className="mt-0.5 block">{renderValue(labs.hdl)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Serum Triglycerides</span>
-              <span className="mt-0.5 block">{renderValue(labs.triglycerides)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Serum Creatinine</span>
-              <span className="mt-0.5 block">{renderValue(labs.creatinine)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">eGFR Kidney Filtration</span>
-              <span className="mt-0.5 block">{renderValue(labs.egfr)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Liver AST Enzymes</span>
-              <span className="mt-0.5 block">{renderValue(labs.ast)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Liver ALT Enzymes</span>
-              <span className="mt-0.5 block">{renderValue(labs.alt)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Serum Uric Acid</span>
-              <span className="mt-0.5 block">{renderValue(labs.uric_acid)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Blood Hemoglobin</span>
-              <span className="mt-0.5 block">{renderValue(labs.hemoglobin)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Vitamin D3</span>
-              <span className="mt-0.5 block">{renderValue(labs.vitamin_d)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Vitamin B12</span>
-              <span className="mt-0.5 block">{renderValue(labs.vitamin_b12)}</span>
-            </div>
+      <div className="border border-slate-150 rounded-2xl p-5 bg-white">
+        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-2 mb-4 flex items-center gap-1.5">
+          <Database size={14} className="text-teal-650" />
+          2. Laboratory Investigations Panel
+        </h4>
+        <div className="grid grid-cols-2 gap-5 text-xs font-semibold text-slate-650">
+          <div>
+            <span className="text-[9px] text-slate-400 uppercase font-bold block">Blood Glucose</span>
+            <span className="mt-0.5 block">{renderValue(labs.blood_sugar)}</span>
+          </div>
+          <div>
+            <span className="text-[9px] text-slate-400 uppercase font-bold block">Total Serum Cholesterol</span>
+            <span className="mt-0.5 block">{renderValue(labs.cholesterol)}</span>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Symptoms & Medical History grid section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -441,30 +335,6 @@ export const MedicalReportView = ({ report, user }) => {
                 {renderValue(symInfo.symptom_description)}
               </p>
             </div>
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Severity Index</span>
-                <span className="mt-0.5 block">{renderValue(symInfo.severity)}</span>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Duration</span>
-                <span className="mt-0.5 block">{renderValue(symInfo.duration)}</span>
-              </div>
-              <div>
-                <span className="text-[9px] text-slate-400 uppercase font-bold block">Indicators</span>
-                <div className="flex flex-wrap gap-1 mt-0.5">
-                  {Array.isArray(symInfo.detected_symptoms) ? (
-                    symInfo.detected_symptoms.map((s, i) => (
-                      <span key={i} className="bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded text-[8px] font-bold">
-                        {s}
-                      </span>
-                    ))
-                  ) : (
-                    <span className="text-slate-400 italic text-[11px]">None</span>
-                  )}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -474,84 +344,22 @@ export const MedicalReportView = ({ report, user }) => {
             <Dumbbell size={14} className="text-teal-650" />
             4. Lifestyle Factors & Social History
           </h4>
-          <div className="grid grid-cols-2 gap-y-2.5 gap-x-2 text-xs font-semibold text-slate-650">
+          <div className="grid grid-cols-3 gap-y-2.5 gap-x-2 text-xs font-semibold text-slate-650">
             <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Smoking Frequency</span>
-              <span className="block">{renderValue(lifestyle.smoking_frequency)}</span>
+              <span className="text-[9px] text-slate-400 uppercase font-bold block">Smoking habit</span>
+              <span className="block">{renderValue(lifestyle.smoking)}</span>
             </div>
             <div>
               <span className="text-[9px] text-slate-400 uppercase font-bold block">Alcohol load</span>
-              <span className="block">{renderValue(lifestyle.alcohol_frequency)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Dietary Choice</span>
-              <span className="block">{renderValue(lifestyle.food_preference)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Fast Food habit</span>
-              <span className="block">{renderValue(lifestyle.fast_food_frequency)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Sugary drink consumption</span>
-              <span className="block">{renderValue(lifestyle.sugary_drink_consumption)}</span>
+              <span className="block">{renderValue(lifestyle.alcohol)}</span>
             </div>
             <div>
               <span className="text-[9px] text-slate-400 uppercase font-bold block">Exercise frequency</span>
-              <span className="block">{renderValue(lifestyle.exercise_frequency)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Water intake</span>
-              <span className="block">{renderValue(lifestyle.water_intake)}</span>
-            </div>
-            <div>
-              <span className="text-[9px] text-slate-400 uppercase font-bold block">Sleep duration / MET</span>
-              <span className="block">{renderValue(lifestyle.sleep_hours)} / {renderValue(lifestyle.met_score)}</span>
+              <span className="block">{renderValue(lifestyle.exercise)}</span>
             </div>
           </div>
         </div>
 
-      </div>
-
-      {/* Medical History section */}
-      <div className="border border-slate-150 rounded-2xl p-5 bg-white">
-        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-2 mb-3 flex items-center gap-1.5">
-          <FileText size={14} className="text-indigo-600" />
-          5. Historical Medical Records
-        </h4>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-semibold text-slate-650">
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Known diseases</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.known_diseases)}</p>
-          </div>
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Current Medications</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.current_medicines)}</p>
-          </div>
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Allergies</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.allergies)}</p>
-          </div>
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Family Medical History</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.family_history)}</p>
-          </div>
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Previous Surgeries</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.previous_surgeries)}</p>
-          </div>
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Hospitalizations</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.hospitalizations)}</p>
-          </div>
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Vaccination History</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.vaccination_history)}</p>
-          </div>
-          <div>
-            <span className="text-[9px] text-slate-400 uppercase font-bold block">Genetic / Inherited Diseases</span>
-            <p className="mt-0.5 block">{renderValue(medHistory.genetic_diseases)}</p>
-          </div>
-        </div>
       </div>
 
       {/* AI Organ Disease predictions sections */}
@@ -561,7 +369,7 @@ export const MedicalReportView = ({ report, user }) => {
         <div className="md:col-span-2 border border-slate-150 rounded-2xl p-5 bg-white space-y-4">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-2 flex items-center gap-1.5">
             <Heart size={14} className="text-rose-500 animate-pulse" />
-            6. Multi-organ AI Risk Probability Predictions
+            5. Multi-organ AI Risk Probability Predictions
           </h4>
           <div className="space-y-3">
             {[
@@ -577,8 +385,8 @@ export const MedicalReportView = ({ report, user }) => {
               return (
                 <div key={idx} className="space-y-1">
                   <div className="flex justify-between text-xs font-bold text-slate-650">
-                    <span>{item.label}</span>
-                    <span>{score}%</span>
+                     <span>{item.label}</span>
+                     <span>{score}%</span>
                   </div>
                   <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                     <div 
@@ -596,7 +404,7 @@ export const MedicalReportView = ({ report, user }) => {
         <div className="border border-slate-150 rounded-2xl p-5 bg-white space-y-4">
           <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-2 flex items-center gap-1.5">
             <Shield size={14} className="text-indigo-650" />
-            7. AI Diagnostic Warnings Checklist
+            6. AI Diagnostic Warnings Checklist
           </h4>
           
           <div className="space-y-3.5">
@@ -615,7 +423,7 @@ export const MedicalReportView = ({ report, user }) => {
       <div className="border border-slate-150 rounded-2xl p-5 bg-teal-50/10 border-teal-500/20">
         <h4 className="text-xs font-bold uppercase tracking-wider text-teal-650 border-b border-teal-500/20 pb-2 mb-3 flex items-center gap-1.5">
           <Sparkles size={14} className="text-teal-600" />
-          8. Physician Clinical review Summary
+          7. Physician Clinical review Summary
         </h4>
         <p className="text-xs font-medium text-slate-700 leading-relaxed bg-white/70 p-4 rounded-2xl border border-slate-100/50">
           {ai.gemini_summary}
@@ -626,7 +434,7 @@ export const MedicalReportView = ({ report, user }) => {
       <div className="border border-slate-150 rounded-2xl p-5 bg-white">
         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-2 mb-4 flex items-center gap-1.5">
           <CheckCircle size={14} className="text-emerald-600" />
-          9. Grouped Care Plan Guidelines
+          8. Grouped Care Plan Guidelines
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs font-semibold text-slate-650">
           <div>
@@ -690,7 +498,7 @@ export const MedicalReportView = ({ report, user }) => {
       <div className="border border-slate-150 rounded-2xl p-5 bg-white space-y-6">
         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b pb-2 flex items-center gap-1.5">
           <Activity size={14} className="text-teal-650" />
-          10. Chronological Patient Health Trends
+          9. Chronological Patient Health Trends
         </h4>
         {trendData.length >= 2 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

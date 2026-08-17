@@ -229,83 +229,34 @@ export const getReportById = async (req, res, next) => {
         gender: familyMember?.gender || assessment?.gender || "Not Provided",
         age: familyMember?.age || assessment?.age || "Not Provided",
         dob: familyMember?.dob || "Not Provided",
-        blood_group: familyMember?.blood_group || assessment?.blood_group || "Not Provided",
         height: familyMember?.height || assessment?.height || "Not Provided",
         weight: familyMember?.weight || assessment?.weight || "Not Provided",
         bmi: assessment?.bmi || "Not Provided",
         phone: familyMember?.phone || "Not Provided",
-        emergency_contact: familyMember?.emergency_contact || "Not Provided",
-        city: assessment?.city || "Not Provided",
-        state: assessment?.state || "Not Provided",
+        emergency_contact: familyMember?.emergency_contact || "Not Provided"
       },
 
       lifestyle: {
         smoking: assessment?.smoking !== undefined ? (assessment.smoking ? "Yes" : "No") : "Not Provided",
-        smoking_frequency: assessment?.smoking_frequency || (assessment?.smoking ? "Occasional" : "Never"),
         alcohol: assessment?.alcohol !== undefined ? (assessment.alcohol ? "Yes" : "No") : "Not Provided",
-        alcohol_frequency: assessment?.alcohol_frequency || (assessment?.alcohol ? "Occasional" : "Never"),
-        food_preference: assessment?.food_preference || assessment?.diet || "Not Provided",
-        diet_preference: assessment?.food_preference || assessment?.diet || "Not Provided",
-        fast_food_frequency: assessment?.fast_food || "Not Provided",
-        sugary_drink_consumption: assessment?.sugary_drinks || "Not Provided",
-        exercise: assessment?.exercise || "Not Provided",
-        exercise_frequency: assessment?.exercise || "Not Provided",
-        physical_activity_level: assessment?.physical_activity || "Not Provided",
-        met_score: assessment?.met_score || "Not Provided",
-        water_intake: assessment?.water_intake !== undefined ? `${assessment.water_intake} L/day` : "Not Provided",
-        fruit_intake: assessment?.fruit_intake || "Not Provided",
-        vegetable_intake: assessment?.vegetable_intake || "Not Provided",
-        sleep_hours: assessment?.sleep !== undefined ? `${assessment.sleep} hrs/day` : "Not Provided",
-        sleep_quality: assessment?.sleep_quality || "Not Provided",
-        stress_level: assessment?.stress || "Not Provided",
-        screen_time: assessment?.screen_time !== undefined ? `${assessment.screen_time} hrs/day` : "Not Provided",
+        exercise: assessment?.exercise || "Not Provided"
       },
 
-      medical_history: {
-        known_diseases: assessment?.known_diseases || "Not Provided",
-        current_medicines: assessment?.medications || assessment?.current_medicines || "Not Provided",
-        allergies: assessment?.allergies || "Not Provided",
-        previous_surgeries: assessment?.previous_surgeries || "Not Provided",
-        hospitalizations: assessment?.hospitalizations || "Not Provided",
-        vaccination_history: assessment?.vaccination_history || "Not Provided",
-        family_history: assessment?.family_history || "Not Provided",
-        genetic_diseases: assessment?.genetic_diseases || "Not Provided",
-      },
+      medical_history: {},
 
       symptoms_details: {
-        symptom_description: assessment?.symptoms || report.symptoms || "Not Provided",
-        detected_symptoms: assessment?.detected_symptoms || (assessment?.symptoms ? [assessment.symptoms] : "Not Provided"),
-        severity: assessment?.severity || "Not Provided",
-        duration: assessment?.duration !== undefined ? `${assessment.duration} days` : "Not Provided",
+        symptom_description: assessment?.symptoms || report.symptoms || "Not Provided"
       },
 
       vitals: {
         bmi: assessment?.bmi || "Not Provided",
         heart_rate: assessment?.heart_rate ? `${assessment.heart_rate} bpm` : "Not Provided",
-        blood_pressure: assessment?.blood_pressure || "Not Provided",
-        temperature: assessment?.temperature ? `${assessment.temperature} °F` : "Not Provided",
-        respiratory_rate: assessment?.respiratory_rate ? `${assessment.respiratory_rate} rpm` : "Not Provided",
-        spo2: assessment?.spo2 ? `${assessment.spo2} %` : "Not Provided",
-        waist_circumference: assessment?.waist_circumference ? `${assessment.waist_circumference} cm` : "Not Provided",
-        hip_circumference: assessment?.hip_circumference ? `${assessment.hip_circumference} cm` : "Not Provided",
+        blood_pressure: assessment?.blood_pressure || "Not Provided"
       },
 
       lab_values: {
-        fasting_blood_sugar: assessment?.blood_sugar ? `${assessment.blood_sugar} mg/dL` : "Not Provided",
-        random_blood_sugar: assessment?.blood_sugar ? `${assessment.blood_sugar} mg/dL` : "Not Provided",
-        hba1c: assessment?.hba1c ? `${assessment.hba1c} %` : "Not Provided",
-        cholesterol: assessment?.cholesterol ? `${assessment.cholesterol} mg/dL` : "Not Provided",
-        ldl: assessment?.ldl ? `${assessment.ldl} mg/dL` : "Not Provided",
-        hdl: assessment?.hdl ? `${assessment.hdl} mg/dL` : "Not Provided",
-        triglycerides: assessment?.triglycerides ? `${assessment.triglycerides} mg/dL` : "Not Provided",
-        creatinine: assessment?.creatinine ? `${assessment.creatinine} mg/dL` : "Not Provided",
-        egfr: assessment?.egfr ? `${assessment.egfr} mL/min/1.73m²` : "Not Provided",
-        ast: assessment?.ast ? `${assessment.ast} U/L` : "Not Provided",
-        alt: assessment?.alt ? `${assessment.alt} U/L` : "Not Provided",
-        uric_acid: assessment?.uric_acid ? `${assessment.uric_acid} mg/dL` : "Not Provided",
-        hemoglobin: assessment?.hemoglobin ? `${assessment.hemoglobin} g/dL` : "Not Provided",
-        vitamin_d: assessment?.vitamin_d ? `${assessment.vitamin_d} ng/mL` : "Not Provided",
-        vitamin_b12: assessment?.vitamin_b12 ? `${assessment.vitamin_b12} pg/mL` : "Not Provided",
+        blood_sugar: assessment?.blood_sugar ? `${assessment.blood_sugar} mg/dL` : "Not Provided",
+        cholesterol: assessment?.cholesterol ? `${assessment.cholesterol} mg/dL` : "Not Provided"
       },
 
       prediction_results: {

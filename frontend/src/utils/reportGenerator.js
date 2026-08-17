@@ -126,10 +126,10 @@ export const generatePdfReport = async (fullReport, user) => {
   const patientProfileData = [
     ['Patient Name:', patientName, 'Date Generated:', `${dateGenerated} ${timeGenerated}`],
     ['Age / DOB:', `${pInfo.age} Yrs / ${pInfo.dob}`, 'Report ID:', reportId],
-    ['Gender / Blood:', `${pInfo.gender} / ${pInfo.blood_group}`, 'Height / Weight:', `${pInfo.height} cm / ${pInfo.weight} kg`],
+    ['Gender:', pInfo.gender, 'Height / Weight:', `${pInfo.height} cm / ${pInfo.weight} kg`],
     ['BMI:', `${pInfo.bmi}`, 'Relationship:', pInfo.relationship],
     ['Phone:', pInfo.phone, 'Emergency Phone:', pInfo.emergency_contact],
-    ['City / State:', `${pInfo.city}, ${pInfo.state}`, 'Assessment Ref:', fullReport.assessment_id]
+    ['Assessment Ref:', fullReport.assessment_id, '-', '-']
   ];
 
   autoTable(doc, {
@@ -193,9 +193,8 @@ export const generatePdfReport = async (fullReport, user) => {
     startY: symptomsY + 4,
     body: [
       ['Description:', symInfo.symptom_description],
-      ['Detected:', Array.isArray(symInfo.detected_symptoms) ? symInfo.detected_symptoms.join(', ') : symInfo.detected_symptoms],
-      ['Severity Index:', symInfo.severity],
-      ['Duration:', symInfo.duration]
+      ['Severity Index:', symInfo.severity || 'Not Provided'],
+      ['Duration:', symInfo.duration || 'Not Provided']
     ],
     theme: 'grid',
     styles: {
@@ -225,9 +224,7 @@ export const generatePdfReport = async (fullReport, user) => {
 
   const vitalsData = [
     ['Blood Pressure:', vitals.blood_pressure, 'Heart Rate:', vitals.heart_rate],
-    ['Body Mass Index:', vitals.bmi, 'Temperature:', vitals.temperature],
-    ['Respiratory Rate:', vitals.respiratory_rate, 'SpO2 Oxygen:', vitals.spo2],
-    ['Waist Circ.:', vitals.waist_circumference, 'Hip Circ.:', vitals.hip_circumference]
+    ['Body Mass Index:', vitals.bmi, '-', '-']
   ];
 
   autoTable(doc, {
@@ -251,14 +248,7 @@ export const generatePdfReport = async (fullReport, user) => {
   doc.text('2. LABORATORY INVESTIGATIONS MATRIX', margin, labsY);
 
   const labsData = [
-    ['Fasting Sugar:', labs.fasting_blood_sugar, 'HbA1c Glycated:', labs.hba1c],
-    ['Random Sugar:', labs.random_blood_sugar, 'Cholesterol Total:', labs.cholesterol],
-    ['LDL Cholesterol:', labs.ldl, 'HDL Cholesterol:', labs.hdl],
-    ['Triglycerides:', labs.triglycerides, 'Serum Creatinine:', labs.creatinine],
-    ['eGFR Filtration:', labs.egfr, 'Liver AST Enzymes:', labs.ast],
-    ['Liver ALT Enzymes:', labs.alt, 'Serum Uric Acid:', labs.uric_acid],
-    ['Hemoglobin:', labs.hemoglobin, 'Vitamin D3:', labs.vitamin_d],
-    ['Vitamin B12:', labs.vitamin_b12, '-', '-']
+    ['Blood Sugar:', labs.blood_sugar, 'Cholesterol Total:', labs.cholesterol]
   ];
 
   autoTable(doc, {
@@ -279,17 +269,11 @@ export const generatePdfReport = async (fullReport, user) => {
   doc.setFont('Helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.text('3. LIFESTYLE HABITS & ACCUMULATED MEDICAL HISTORY', margin, lifestyleY);
+  doc.text('3. LIFESTYLE HABITS', margin, lifestyleY);
 
   const lifestyleHistoryData = [
-    ['Diet Preference:', lifestyle.diet_preference, 'Known Diseases:', medHistory.known_diseases],
-    ['Exercise habit:', lifestyle.exercise, 'Current Medications:', medHistory.current_medicines],
-    ['Tobacco / Smoking:', lifestyle.smoking, 'Allergies:', medHistory.allergies],
-    ['Alcohol Intake:', lifestyle.alcohol, 'Previous Surgeries:', medHistory.previous_surgeries],
-    ['Sleep Load:', lifestyle.sleep_hours, 'Hospitalizations:', medHistory.hospitalizations],
-    ['Water Intake:', lifestyle.water_intake, 'Vaccination History:', medHistory.vaccination_history],
-    ['Stress Score:', lifestyle.stress_level, 'Family History:', medHistory.family_history],
-    ['Screen Exposure:', lifestyle.screen_time, 'Genetic Diseases:', medHistory.genetic_diseases]
+    ['Exercise habit:', lifestyle.exercise, 'Tobacco / Smoking:', lifestyle.smoking],
+    ['Alcohol Intake:', lifestyle.alcohol, '-', '-']
   ];
 
   autoTable(doc, {

@@ -82,57 +82,8 @@ Patient Assessment:
 - Blood Sugar: ${assessment.blood_sugar || 'Normal'}
 - Cholesterol: ${assessment.cholesterol || 'Normal'}
 - Heart Rate: ${assessment.heart_rate || 'Normal'}
-- Habits: Smoking: ${assessment.smoking}, Alcohol: ${assessment.alcohol}, Exercise: ${assessment.exercise}, Sleep: ${assessment.sleep} hours
-- Symptoms: ${assessment.symptoms || 'None'}
-- Current Medications: ${assessment.medications || 'None'}
-- Allergies: ${assessment.allergies || 'None'}
-- Family History: ${assessment.family_history || 'None'}
-- Known Diseases: ${assessment.known_diseases || 'None'}`;
-
-      // Append optional vitals if present
-      const vitalsKeys = {
-        temperature: 'Body Temperature (°F)',
-        spo2: 'Oxygen Saturation (SpO2 %)',
-        respiratory_rate: 'Respiratory Rate (rpm)',
-        waist_circumference: 'Waist Circumference (cm)',
-        hip_circumference: 'Hip Circumference (cm)'
-      };
-      let hasVitals = false;
-      for (const [k, label] of Object.entries(vitalsKeys)) {
-        if (assessment[k] !== null && assessment[k] !== undefined) {
-          if (!hasVitals) {
-            prompt += `\n\nOptional Advanced Vitals:`;
-            hasVitals = true;
-          }
-          prompt += `\n- ${label}: ${assessment[k]}`;
-        }
-      }
-
-      // Append optional lab metrics if present
-      const labKeys = {
-        hba1c: 'HbA1c (%)',
-        ldl: 'LDL Cholesterol (mg/dL)',
-        hdl: 'HDL Cholesterol (mg/dL)',
-        triglycerides: 'Triglycerides (mg/dL)',
-        creatinine: 'Serum Creatinine (mg/dL)',
-        egfr: 'eGFR (mL/min)',
-        ast: 'Liver AST (U/L)',
-        alt: 'Liver ALT (U/L)',
-        uric_acid: 'Uric Acid (mg/dL)',
-        hemoglobin: 'Hemoglobin (g/dL)',
-        vitamin_d: 'Vitamin D3 (ng/mL)',
-        vitamin_b12: 'Vitamin B12 (pg/mL)'
-      };
-      let hasLabs = false;
-      for (const [k, label] of Object.entries(labKeys)) {
-        if (assessment[k] !== null && assessment[k] !== undefined) {
-          if (!hasLabs) {
-            prompt += `\n\nOptional Laboratory Metrics:`;
-            hasLabs = true;
-          }
-          prompt += `\n- ${label}: ${assessment[k]}`;
-        }
-      }
+- Habits: Smoking: ${assessment.smoking}, Alcohol: ${assessment.alcohol}, Exercise: ${assessment.exercise}
+- Symptoms: ${assessment.symptoms || 'None'}`;
 
       prompt += `\n\nAI Risk Prediction (FastAPI Scikit-Learn Model Output):
 - Cardiovascular Risk Score: ${prediction.cardio_risk}%
@@ -288,10 +239,6 @@ Do not include any markdown wrappers (like \`\`\`json) in the response outside t
         height: assessment.height,
         weight: assessment.weight,
         bmi: assessment.bmi,
-        blood_group: assessment.blood_group,
-        occupation: assessment.occupation,
-        city: assessment.city,
-        state: assessment.state,
         blood_pressure: assessment.blood_pressure,
         blood_sugar: assessment.blood_sugar,
         heart_rate: assessment.heart_rate,
@@ -301,26 +248,10 @@ Do not include any markdown wrappers (like \`\`\`json) in the response outside t
       const lifestyleInfo = {
         smoking: assessment.smoking,
         alcohol: assessment.alcohol,
-        exercise: assessment.exercise || assessment.exercise_frequency,
-        sleep: assessment.sleep_hours || assessment.sleep,
-        water_intake: assessment.water_intake,
-        food_preference: assessment.food_preference,
-        diet: assessment.diet,
-        fast_food: assessment.fast_food,
-        sugary_drinks: assessment.sugary_drinks,
-        stress: assessment.stress,
-        screen_time: assessment.screen_time,
-        fruit_intake: assessment.fruit_intake,
-        vegetable_intake: assessment.vegetable_intake,
-        physical_activity: assessment.physical_activity
+        exercise: assessment.exercise || assessment.exercise_frequency
       };
 
-      const medicalHistory = {
-        known_diseases: assessment.known_diseases,
-        current_medicines: assessment.current_medicines || assessment.medications,
-        allergies: assessment.allergies,
-        family_history: assessment.family_history
-      };
+      const medicalHistory = {};
 
       const predictionResults = {
         health_score: prediction.health_score,

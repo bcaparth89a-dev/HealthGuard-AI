@@ -26,8 +26,6 @@ class RiskPredictionRequest(BaseModel):
     # Optional parameters passed by the frontend records log
     height: Optional[float] = None
     weight: Optional[float] = None
-    sleep: Optional[float] = None
-    family_history: Optional[str] = None
     symptoms: Optional[str] = None
     
     @model_validator(mode='before')
@@ -129,13 +127,7 @@ class AllPredictionRequest(BaseModel):
     smoking: Union[bool, str]
     alcohol: Union[bool, str]
     exercise: str
-    sleep: float
-    family_history: Optional[str] = None
     symptoms: Optional[str] = None
-    medications: Optional[str] = None
-    allergies: Optional[str] = None
-    city: Optional[str] = None
-    state: Optional[str] = None
 
 class AllPredictionResponse(BaseModel):
     diabetesRisk: int

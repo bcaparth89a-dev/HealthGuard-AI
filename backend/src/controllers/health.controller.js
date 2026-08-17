@@ -155,13 +155,7 @@ export const predictRisk = async (req, res, next) => {
       smoking: toBoolVal(assessment.smoking),
       alcohol: toBoolVal(assessment.alcohol),
       exercise: assessment.exercise || 'Moderate',
-      sleep: parseFloat(assessment.sleep || 8),
-      family_history: assessment.family_history || 'None',
-      symptoms: assessment.symptoms || '',
-      medications: assessment.medications || 'None',
-      allergies: assessment.allergies || 'None',
-      city: assessment.city || '',
-      state: assessment.state || ''
+      symptoms: assessment.symptoms || ''
     };
 
     logger.info('Calling FastAPI');
