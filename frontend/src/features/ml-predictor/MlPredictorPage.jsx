@@ -231,9 +231,9 @@ export const MlPredictorPage = () => {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-950/20 text-red-500 mb-4">
                 <AlertTriangle size={24} />
               </div>
-              <h3 className="text-md font-bold text-slate-800 dark:text-slate-100">FastAPI Server Connection Refused</h3>
+              <h3 className="text-md font-bold text-slate-800 dark:text-slate-100">Prediction Engine Connection Refused</h3>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-sm">
-                {mutation.error?.message || 'We could not connect to the ML engine running on localhost:8000. Verify the server is running.'}
+                {mutation.error?.message || 'We could not connect to the machine learning prediction engine. Verify the service is online.'}
               </p>
               <Button onClick={() => mutation.mutate()} variant="outline" className="mt-4">
                 Retry Connection

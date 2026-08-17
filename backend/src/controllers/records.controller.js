@@ -94,7 +94,7 @@ export const uploadRecord = async (req, res, next) => {
           summary = generated.trim();
         }
       } catch (err) {
-        logger.warn('Failed to call Gemini for document summary, using default. Error: ' + err.message);
+        logger.warn('Failed to call Gemini for document summary, using default.');
       }
     }
 

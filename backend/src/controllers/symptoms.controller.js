@@ -94,13 +94,21 @@ Do not include any markdown wrappers like \`\`\`json. Ensure the response is val
     }
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-    const response = await axios.post(url, {
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { responseMimeType: 'application/json' }
-    }, {
-      headers: { 'Content-Type': 'application/json' },
-      timeout: 25000
-    });
+    let response;
+    try {
+      response = await axios.post(url, {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseMimeType: 'application/json' }
+      }, {
+        headers: { 'Content-Type': 'application/json' },
+        timeout: 25000
+      });
+    } catch (apiErr) {
+      logger.error('Gemini API call failed in symptoms controller');
+      const safeError = new Error('Triage symptom analysis failed due to an external model service issue.');
+      safeError.status = 502;
+      throw safeError;
+    }
 
     const responseText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!responseText) {

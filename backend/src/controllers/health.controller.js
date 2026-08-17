@@ -88,14 +88,6 @@ export const predictRisk = async (req, res, next) => {
     }
 
     // 2. Fetch the health assessment record from Supabase
-    logger.info('Fetching baseline assessment from Supabase...');
-    console.log("assessmentId =", assessmentId);
-    console.log("userId =", userId);
-    console.log("SUPABASE_URL =", process.env.SUPABASE_URL);
-    console.log(
-      "SUPABASE_SERVICE_ROLE_KEY exists =",
-      !!process.env.SUPABASE_SERVICE_ROLE_KEY
-    );
 
     const { data: assessment, error: fetchError } = await supabase
       .from('health_records')
@@ -104,17 +96,7 @@ export const predictRisk = async (req, res, next) => {
       .eq('user_id', userId)
       .single();
 
-    console.log("assessment =", assessment);
-    console.log("fetchError =", fetchError);
-
     if (fetchError || !assessment) {
-      console.log("Executing debug query because assessment is null/error...");
-      const debug = await supabase
-        .from("health_records")
-        .select("*")
-        .eq("id", assessmentId);
-      console.log("debug =", debug);
-
       logger.error(`Failed to retrieve assessment for ID ${assessmentId}:`, fetchError || 'Record not found');
       return res.status(404).json({ error: fetchError ? fetchError.message : 'Assessment record not found' });
     }
@@ -159,13 +141,18 @@ export const predictRisk = async (req, res, next) => {
     };
 
     logger.info('Calling FastAPI');
-    logger.info(`FastAPI URL: http://localhost:8000/predict/all`);
-    logger.info(`Payload: ${JSON.stringify(fastApiPayload)}`);
+    logger.info(`FastAPI URL: ${config.mlApiUrl}/predict/all`);
     
-    const mlResponse = await axios.post('http://localhost:8000/predict/all', fastApiPayload);
+    let mlResponse;
+    try {
+      mlResponse = await axios.post(`${config.mlApiUrl}/predict/all`, fastApiPayload, { timeout: 10000 });
+    } catch (apiErr) {
+      logger.error('ML API invocation failed:', apiErr.message || apiErr);
+      const customErr = new Error('The machine learning prediction service is currently unavailable or timed out. Please try again later.');
+      customErr.status = 503;
+      throw customErr;
+    }
     const prediction = mlResponse.data;
-    
-    logger.info(`FastAPI response: ${JSON.stringify(prediction)}`);
 
     // 4. Save model predictions results into risk_predictions
     logger.info('Saving prediction to Supabase...');

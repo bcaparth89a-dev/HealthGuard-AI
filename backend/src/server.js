@@ -14,9 +14,7 @@ const server = app.listen(PORT, HOST, () => {
     `HealthGuard AI server successfully initialized in [${config.nodeEnv}] mode`
   );
 
-  logger.info(
-    `Server listening for HTTP requests on address http://${HOST}:${PORT}`
-  );
+  logger.info(`Server listening on ${HOST}:${PORT}`);
 });
 
 // Capture uncaught exceptions and shutdown cleanly

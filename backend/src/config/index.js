@@ -1,11 +1,7 @@
 import dotenv from 'dotenv';
 
 dotenv.config();
-console.log("===== ENV DEBUG =====");
-console.log("SUPABASE_URL =", process.env.SUPABASE_URL);
-console.log("SUPABASE_SERVICE_ROLE_KEY =", process.env.SUPABASE_SERVICE_ROLE_KEY);
-console.log("All env keys:", Object.keys(process.env).filter(k => k.includes("SUPABASE")));
-console.log("=====================");
+
 export default {
   port: process.env.PORT || 5000,
   nodeEnv: process.env.NODE_ENV || 'development',
