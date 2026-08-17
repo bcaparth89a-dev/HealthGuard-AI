@@ -9,13 +9,15 @@ import Button from '../../components/ui/Button';
 import SEO from '../../components/common/SEO';
 
 export const SymptomCheckerPage = () => {
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
     defaultValues: {
       symptoms: '',
       severity: 5,
       duration: '1',
     }
   });
+
+  const severityVal = watch('severity');
 
   const mutation = useMutation({
     mutationFn: healthService.checkSymptoms,
@@ -57,7 +59,7 @@ export const SymptomCheckerPage = () => {
 
               <div className="flex flex-col gap-1.5 w-full">
                 <label className="text-xs font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">
-                  Severity Rating ({register('severity').value || 'Scale'})
+                  Severity Rating ({severityVal})
                 </label>
                 <input
                   type="range"

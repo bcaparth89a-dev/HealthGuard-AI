@@ -90,10 +90,10 @@ export const Layout = () => {
       }`}>
         
         {/* Sidebar Header Brand Area */}
-        <div className="flex h-16 items-center justify-between px-6 border-b border-slate-50 dark:border-slate-700/50 shrink-0">
+        <div className="flex h-16 items-center justify-between px-6 border-b border-slate-100/60 dark:border-slate-700/50 shrink-0">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-500 text-white shadow-premium">
-              <ShieldAlert size={22} />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-brand-600 to-brand-500 text-white shadow-premium">
+              <Activity size={20} className="animate-pulse" />
             </div>
             {!sidebarCollapsed && (
               <motion.div 
@@ -101,8 +101,8 @@ export const Layout = () => {
                 animate={{ opacity: 1 }}
                 className="flex flex-col"
               >
-                <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-tight whitespace-nowrap">HealthGuard AI</h1>
-                <span className="text-[9px] text-brand-600 dark:text-brand-400 font-bold tracking-wider uppercase whitespace-nowrap">Clinical EMR Platform</span>
+                <h1 className="text-sm font-extrabold text-slate-800 dark:text-slate-100 tracking-tight leading-tight whitespace-nowrap">HealthGuard AI</h1>
+                <span className="text-[9px] text-brand-600 dark:text-accent-500 font-extrabold tracking-wider uppercase whitespace-nowrap">Clinical EMR Platform</span>
               </motion.div>
             )}
           </div>
@@ -110,7 +110,7 @@ export const Layout = () => {
           {/* Collapse Icon Button for Desktop */}
           <button
             onClick={toggleSidebarCollapse}
-            className="hidden lg:flex p-1.5 rounded-lg border border-slate-200/50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+            className="hidden lg:flex p-1.5 rounded-lg border border-slate-200/50 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-400 hover:text-slate-650 dark:hover:text-slate-200 transition-colors"
           >
             {sidebarCollapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
           </button>
@@ -127,8 +127,8 @@ export const Layout = () => {
                 onClick={() => setSidebarOpen(false)}
                 className={`relative flex items-center gap-3 px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-200 group ${
                   isActive
-                    ? 'bg-brand-500 text-white shadow-premium'
-                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-slate-800 dark:hover:text-slate-100'
+                    ? 'bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-premium scale-[1.02]'
+                    : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/40 hover:text-slate-850 dark:hover:text-slate-100'
                 }`}
                 title={sidebarCollapsed ? item.name : ''}
               >

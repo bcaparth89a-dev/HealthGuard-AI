@@ -269,10 +269,10 @@ export const MlPredictorPage = () => {
                     <div className="relative flex items-center justify-center h-44 w-44">
                       <svg className="w-full h-full transform -rotate-90">
                         <circle cx="88" cy="88" r="74" className="stroke-slate-100 dark:stroke-slate-700" strokeWidth="10" fill="transparent" />
-                        <circle cx="88" cy="88" r="74" stroke="#8b5cf6" strokeWidth="10" fill="transparent"
+                        <circle cx="88" cy="88" r="74" stroke="currentColor" strokeWidth="10" fill="transparent"
                           strokeDasharray={2 * Math.PI * 74}
                           strokeDashoffset={2 * Math.PI * 74 * (1 - predictionData.healthScore / 100)}
-                          className="transition-all duration-1000 ease-out"
+                          className="text-brand-500 dark:text-accent-500 transition-all duration-1000 ease-out"
                         />
                       </svg>
                       <div className="absolute flex flex-col items-center">
@@ -281,46 +281,73 @@ export const MlPredictorPage = () => {
                       </div>
                     </div>
                   </div>
-
+ 
                   {/* Indicators progress */}
-                  <div className="flex flex-col justify-center gap-4">
+                  <div className="flex flex-col justify-center gap-5">
                     {/* Cardio */}
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-                        <span>Cardiovascular Risk</span>
-                        <span className="text-slate-800 dark:text-slate-200">{predictionData.cardioRisk}%</span>
+                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 items-center">
+                        <span className="font-bold text-slate-700 dark:text-slate-300">Cardiovascular Risk</span>
+                        <div className="flex items-center gap-2">
+                          <span className={`px-1.5 py-0.5 rounded text-[8px] font-extrabold border ${
+                            predictionData.cardioRisk < 25 ? 'bg-emerald-50 text-emerald-700 dark:bg-slate-900 border-emerald-100 dark:border-emerald-900/30' :
+                            predictionData.cardioRisk < 50 ? 'bg-amber-50 text-amber-700 dark:bg-slate-900 border-amber-100 dark:border-amber-900/30' :
+                            'bg-rose-50 text-rose-700 dark:bg-slate-900 border-rose-100 dark:border-rose-900/30'
+                          }`}>
+                            {predictionData.cardioRisk < 25 ? 'Low' : predictionData.cardioRisk < 50 ? 'Moderate' : 'High'}
+                          </span>
+                          <span className="text-slate-800 dark:text-slate-200 font-extrabold">{predictionData.cardioRisk}%</span>
+                        </div>
                       </div>
-                      <div className="w-full bg-slate-100 dark:bg-slate-750 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                         <div 
-                          className="bg-red-400 h-full rounded-full transition-all duration-1000"
+                          className="bg-rose-500 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${predictionData.cardioRisk}%` }}
                         />
                       </div>
                     </div>
-
+ 
                     {/* Diabetes */}
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-                        <span>Diabetes Risk</span>
-                        <span className="text-slate-800 dark:text-slate-200">{predictionData.diabetesRisk}%</span>
+                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 items-center">
+                        <span className="font-bold text-slate-700 dark:text-slate-300">Diabetes Risk</span>
+                        <div className="flex items-center gap-2">
+                          <span className={`px-1.5 py-0.5 rounded text-[8px] font-extrabold border ${
+                            predictionData.diabetesRisk < 25 ? 'bg-emerald-50 text-emerald-700 dark:bg-slate-900 border-emerald-100 dark:border-emerald-900/30' :
+                            predictionData.diabetesRisk < 50 ? 'bg-amber-50 text-amber-700 dark:bg-slate-900 border-amber-100 dark:border-amber-900/30' :
+                            'bg-rose-50 text-rose-700 dark:bg-slate-900 border-rose-100 dark:border-rose-900/30'
+                          }`}>
+                            {predictionData.diabetesRisk < 25 ? 'Low' : predictionData.diabetesRisk < 50 ? 'Moderate' : 'High'}
+                          </span>
+                          <span className="text-slate-800 dark:text-slate-200 font-extrabold">{predictionData.diabetesRisk}%</span>
+                        </div>
                       </div>
-                      <div className="w-full bg-slate-100 dark:bg-slate-750 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                         <div 
-                          className="bg-amber-400 h-full rounded-full transition-all duration-1000"
+                          className="bg-amber-500 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${predictionData.diabetesRisk}%` }}
                         />
                       </div>
                     </div>
-
+ 
                     {/* Stroke */}
                     <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
-                        <span>Stroke Risk</span>
-                        <span className="text-slate-800 dark:text-slate-200">{predictionData.strokeRisk}%</span>
+                      <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 items-center">
+                        <span className="font-bold text-slate-700 dark:text-slate-300">Stroke Risk</span>
+                        <div className="flex items-center gap-2">
+                          <span className={`px-1.5 py-0.5 rounded text-[8px] font-extrabold border ${
+                            predictionData.strokeRisk < 25 ? 'bg-emerald-50 text-emerald-700 dark:bg-slate-900 border-emerald-100 dark:border-emerald-900/30' :
+                            predictionData.strokeRisk < 50 ? 'bg-amber-50 text-amber-700 dark:bg-slate-900 border-amber-100 dark:border-amber-900/30' :
+                            'bg-rose-50 text-rose-700 dark:bg-slate-900 border-rose-100 dark:border-rose-900/30'
+                          }`}>
+                            {predictionData.strokeRisk < 25 ? 'Low' : predictionData.strokeRisk < 50 ? 'Moderate' : 'High'}
+                          </span>
+                          <span className="text-slate-800 dark:text-slate-200 font-extrabold">{predictionData.strokeRisk}%</span>
+                        </div>
                       </div>
-                      <div className="w-full bg-slate-100 dark:bg-slate-750 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                         <div 
-                          className="bg-blue-400 h-full rounded-full transition-all duration-1000"
+                          className="bg-accent-500 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${predictionData.strokeRisk}%` }}
                         />
                       </div>

@@ -167,78 +167,223 @@ export const DashboardPage = () => {
     };
   });
 
+  const latestReportOverall = [...reports].sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+  const overallScore = latestReportOverall ? (latestReportOverall.health_score || latestReportOverall.overall_health_score || 0) : 0;
+  const latestBmi = latestReportOverall ? (latestReportOverall.personal_info?.bmi || latestReportOverall.bmi || 0) : 0;
+  const diabetesRiskVal = latestReportOverall ? (latestReportOverall.disease_risks?.diabetesRisk || latestReportOverall.prediction_results?.diabetes_risk || 0) : 0;
+  const heartRiskVal = latestReportOverall ? (latestReportOverall.disease_risks?.cardioRisk || latestReportOverall.prediction_results?.cardio_risk || 0) : 0;
+  const strokeRiskVal = latestReportOverall ? (latestReportOverall.disease_risks?.strokeRisk || latestReportOverall.prediction_results?.stroke_risk || 0) : 0;
+
+  const getGreeting = () => {
+    const hr = new Date().getHours();
+    if (hr < 12) return 'Good morning';
+    if (hr < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+  const greeting = getGreeting();
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto transition-colors duration-200">
       <SEO title="Dashboard | HealthGuard AI" robots="noindex,nofollow" />
       
       {/* Welcome Greeting Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-slate-50 to-indigo-50/30 dark:from-slate-900 dark:to-slate-800/40 p-6 rounded-3xl border border-slate-100 dark:border-slate-800/60">
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <Users className="text-teal-600 dark:text-teal-400 animate-pulse" size={26} />
-            Welcome, {user?.name || 'User'}
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-850 dark:text-slate-100">
+            {greeting}, {user?.name || 'User'}
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Family Electronic Medical Record (EMR) System. isolated histories, automated diagnostics.</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 font-semibold">Here is your clinical health overview and family records dashboard.</p>
         </div>
         <Button 
           onClick={() => setIsAddModalOpen(true)}
-          className="bg-teal-600 hover:bg-teal-700 text-xs font-bold gap-1.5 py-2.5 rounded-xl shadow-sm"
+          className="bg-brand-500 hover:bg-brand-600 text-xs font-bold gap-1.5 py-2.5 rounded-xl shadow-premium"
         >
           <Plus size={16} /> Add Family Member
         </Button>
       </div>
 
-      {/* Stats Cards Row */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Quick Actions Panel */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div 
+          onClick={() => navigate('/assessment')}
+          className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/60 shadow-premium hover:shadow-premium-hover cursor-pointer transition-all duration-200 hover:-translate-y-1 group"
+        >
+          <div className="p-3 bg-brand-50 dark:bg-brand-950/20 text-brand-500 rounded-xl group-hover:bg-brand-500 group-hover:text-white transition-colors duration-200">
+            <ClipboardList size={20} />
+          </div>
+          <div>
+            <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-1">Health Assessment</h4>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold leading-relaxed">Log vitals, lifestyle habits, and symptoms in your EMR dossier.</p>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => navigate('/symptoms')}
+          className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/60 shadow-premium hover:shadow-premium-hover cursor-pointer transition-all duration-200 hover:-translate-y-1 group"
+        >
+          <div className="p-3 bg-accent-50 dark:bg-accent-950/20 text-accent-500 rounded-xl group-hover:bg-accent-500 group-hover:text-white transition-colors duration-200">
+            <Activity size={20} />
+          </div>
+          <div>
+            <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-1">Symptom Checker</h4>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold leading-relaxed">Describe physical anomalies for real-time AI triage advice.</p>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => navigate('/predict')}
+          className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/60 shadow-premium hover:shadow-premium-hover cursor-pointer transition-all duration-200 hover:-translate-y-1 group"
+        >
+          <div className="p-3 bg-rose-50 dark:bg-rose-950/20 text-rose-500 rounded-xl group-hover:bg-rose-500 group-hover:text-white transition-colors duration-200">
+            <Sparkles size={20} />
+          </div>
+          <div>
+            <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-1">ML Predictor</h4>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold leading-relaxed">Score diabetes, cardiac, and stroke risk indexes instantly.</p>
+          </div>
+        </div>
+
+        <div 
+          onClick={() => navigate('/records')}
+          className="flex items-start gap-4 p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/60 shadow-premium hover:shadow-premium-hover cursor-pointer transition-all duration-200 hover:-translate-y-1 group"
+        >
+          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-500 rounded-xl group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-200">
+            <FileText size={20} />
+          </div>
+          <div>
+            <h4 className="text-xs font-extrabold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-1">Medical Records</h4>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold leading-relaxed">Upload and OCR lab reports or clinical documents.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Cards Row - 5 Health Summary Cards */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
         
-        {/* Total Family Members */}
-        <Card animate>
+        {/* Overall Health Score */}
+        <Card animate className="hover:shadow-premium border border-slate-200/40 dark:border-slate-800/80">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-450 dark:text-slate-400">Total Family Members</p>
-              <h4 className="mt-2 text-2xl font-extrabold text-slate-800 dark:text-slate-100">{emrStats.totalFamilyMembers}</h4>
+              <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Overall Health Score</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-800 dark:text-slate-100">
+                {overallScore ? `${overallScore}%` : 'N/A'}
+              </h4>
+              <span className={`inline-block text-[8px] font-extrabold px-1.5 py-0.5 rounded border mt-2 ${
+                overallScore >= 80 ? 'bg-emerald-50 text-emerald-700 dark:bg-slate-900/60 border-emerald-100 dark:border-emerald-900/30' :
+                overallScore >= 60 ? 'bg-amber-50 text-amber-700 dark:bg-slate-900/60 border-amber-100 dark:border-amber-900/30' :
+                overallScore > 0 ? 'bg-rose-50 text-rose-700 dark:bg-slate-900/60 border-rose-100 dark:border-rose-900/30' : 'bg-slate-50 text-slate-400 dark:bg-slate-900/60 border-slate-100 dark:border-slate-800'
+              }`}>
+                {overallScore >= 80 ? 'Excellent' : overallScore >= 60 ? 'Good' : overallScore > 0 ? 'Needs Attention' : 'No Data'}
+              </span>
             </div>
-            <div className="p-2.5 bg-teal-50 dark:bg-teal-950/20 text-teal-600 dark:text-teal-405 rounded-xl">
-              <Users size={18} />
+            <div className="p-2 bg-brand-50 dark:bg-brand-950/20 text-brand-500 rounded-xl">
+              <Heart size={16} />
             </div>
           </div>
         </Card>
 
-        {/* Total EMR Files */}
-        <Card animate>
+        {/* BMI Index */}
+        <Card animate className="hover:shadow-premium border border-slate-200/40 dark:border-slate-800/80">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-450 dark:text-slate-400">Total Reports</p>
-              <h4 className="mt-2 text-2xl font-extrabold text-slate-800 dark:text-slate-100">{emrStats.totalReports}</h4>
+              <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">BMI Index</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-800 dark:text-slate-100">
+                {latestBmi ? latestBmi.toFixed(1) : 'N/A'}
+              </h4>
+              <span className={`inline-block text-[8px] font-extrabold px-1.5 py-0.5 rounded border mt-2 ${
+                latestBmi ? (
+                  latestBmi < 18.5 ? 'bg-amber-50 text-amber-700 border-amber-100' :
+                  latestBmi < 25 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
+                  latestBmi < 30 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100'
+                ) : 'bg-slate-50 text-slate-400 border-slate-100'
+              } dark:bg-slate-900/60 dark:border-slate-800`}>
+                {latestBmi ? (
+                  latestBmi < 18.5 ? 'Underweight' :
+                  latestBmi < 25 ? 'Normal Weight' :
+                  latestBmi < 30 ? 'Overweight' : 'Obese'
+                ) : 'No Data'}
+              </span>
             </div>
-            <div className="p-2.5 bg-blue-50 dark:bg-blue-950/20 text-blue-600 dark:text-blue-405 rounded-xl">
-              <FileText size={18} />
+            <div className="p-2 bg-accent-50 dark:bg-accent-950/20 text-accent-500 rounded-xl">
+              <Activity size={16} />
             </div>
           </div>
         </Card>
 
-        {/* High Risk Members */}
-        <Card animate>
+        {/* Diabetes Risk */}
+        <Card animate className="hover:shadow-premium border border-slate-200/40 dark:border-slate-800/80">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-450 dark:text-slate-400">High Risk Alerts</p>
-              <h4 className="mt-2 text-2xl font-extrabold text-rose-600 dark:text-rose-550">{emrStats.highRiskMembers}</h4>
+              <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Diabetes Risk</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-850 dark:text-slate-100">
+                {diabetesRiskVal ? `${Math.round(diabetesRiskVal)}%` : 'N/A'}
+              </h4>
+              <span className={`inline-block text-[8px] font-extrabold px-1.5 py-0.5 rounded border mt-2 ${
+                diabetesRiskVal ? (
+                  diabetesRiskVal < 25 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
+                  diabetesRiskVal < 50 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100'
+                ) : 'bg-slate-50 text-slate-400 border-slate-100'
+              } dark:bg-slate-900/60 dark:border-slate-800`}>
+                {diabetesRiskVal ? (
+                  diabetesRiskVal < 25 ? 'Low Threat' :
+                  diabetesRiskVal < 50 ? 'Moderate' : 'High Threat'
+                ) : 'No Data'}
+              </span>
             </div>
-            <div className="p-2.5 bg-rose-50 dark:bg-rose-950/20 text-rose-500 dark:text-rose-405 rounded-xl">
-              <ShieldAlert size={18} />
+            <div className="p-2 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-500 rounded-xl">
+              <TrendingUp size={16} />
             </div>
           </div>
         </Card>
 
-        {/* Today's Evaluations */}
-        <Card animate>
+        {/* Heart Risk */}
+        <Card animate className="hover:shadow-premium border border-slate-200/40 dark:border-slate-800/80">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-450 dark:text-slate-400">Today's Reports</p>
-              <h4 className="mt-2 text-2xl font-extrabold text-slate-800 dark:text-slate-100">{emrStats.todayReports}</h4>
+              <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Heart Risk</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-850 dark:text-slate-100">
+                {heartRiskVal ? `${Math.round(heartRiskVal)}%` : 'N/A'}
+              </h4>
+              <span className={`inline-block text-[8px] font-extrabold px-1.5 py-0.5 rounded border mt-2 ${
+                heartRiskVal ? (
+                  heartRiskVal < 25 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
+                  heartRiskVal < 50 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100'
+                ) : 'bg-slate-50 text-slate-400 border-slate-100'
+              } dark:bg-slate-900/60 dark:border-slate-800`}>
+                {heartRiskVal ? (
+                  heartRiskVal < 25 ? 'Low Threat' :
+                  heartRiskVal < 50 ? 'Moderate' : 'High Threat'
+                ) : 'No Data'}
+              </span>
             </div>
-            <div className="p-2.5 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-600 dark:text-emerald-405 rounded-xl">
-              <Activity size={18} />
+            <div className="p-2 bg-rose-50 dark:bg-rose-950/20 text-rose-500 rounded-xl">
+              <Heart size={16} />
+            </div>
+          </div>
+        </Card>
+
+        {/* Stroke Risk */}
+        <Card animate className="hover:shadow-premium border border-slate-200/40 dark:border-slate-800/80">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Stroke Risk</p>
+              <h4 className="mt-2 text-2xl font-extrabold text-slate-850 dark:text-slate-100">
+                {strokeRiskVal ? `${Math.round(strokeRiskVal)}%` : 'N/A'}
+              </h4>
+              <span className={`inline-block text-[8px] font-extrabold px-1.5 py-0.5 rounded border mt-2 ${
+                strokeRiskVal ? (
+                  strokeRiskVal < 25 ? 'bg-emerald-50 text-emerald-700 border-emerald-100' :
+                  strokeRiskVal < 50 ? 'bg-amber-50 text-amber-700 border-amber-100' : 'bg-rose-50 text-rose-700 border-rose-100'
+                ) : 'bg-slate-50 text-slate-400 border-slate-100'
+              } dark:bg-slate-900/60 dark:border-slate-800`}>
+                {strokeRiskVal ? (
+                  strokeRiskVal < 25 ? 'Low Threat' :
+                  strokeRiskVal < 50 ? 'Moderate' : 'High Threat'
+                ) : 'No Data'}
+              </span>
+            </div>
+            <div className="p-2 bg-amber-50 dark:bg-amber-950/20 text-amber-500 rounded-xl">
+              <ShieldAlert size={16} />
             </div>
           </div>
         </Card>

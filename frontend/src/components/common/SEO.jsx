@@ -56,11 +56,11 @@ export const SEO = ({
     updateMetaTag('name', 'robots', robots);
 
     // 3. Canonical Link URL Generation
-    const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
+    const siteUrl = (import.meta.env.VITE_SITE_URL || window.location.origin).replace(/\/+$/, '');
     const currentPath = canonical || window.location.pathname;
-    // Strip trailing slash
-    const formattedPath = currentPath.endsWith('/') && currentPath.length > 1 ? currentPath.slice(0, -1) : currentPath;
-    const fullCanonicalUrl = `${siteUrl}${formattedPath}`;
+    const formattedPath = currentPath.startsWith('/') ? currentPath : `/${currentPath}`;
+    const cleanPath = formattedPath.endsWith('/') && formattedPath.length > 1 ? formattedPath.slice(0, -1) : formattedPath;
+    const fullCanonicalUrl = `${siteUrl}${cleanPath}`;
     updateLinkTag('canonical', fullCanonicalUrl);
 
     // 4. Open Graph Social Metadata
@@ -70,17 +70,14 @@ export const SEO = ({
     updateMetaTag('property', 'og:url', fullCanonicalUrl);
     updateMetaTag('property', 'og:site_name', 'HealthGuard AI');
     updateMetaTag('property', 'og:locale', 'en_US');
-    if (ogImage) {
-      updateMetaTag('property', 'og:image', ogImage);
-    }
+    const ogImgUrl = ogImage || `${siteUrl}/og-image.png`;
+    updateMetaTag('property', 'og:image', ogImgUrl);
 
     // 5. Twitter / X Cards Metadata
     updateMetaTag('name', 'twitter:card', 'summary_large_image');
     updateMetaTag('name', 'twitter:title', title);
     updateMetaTag('name', 'twitter:description', description);
-    if (ogImage) {
-      updateMetaTag('name', 'twitter:image', ogImage);
-    }
+    updateMetaTag('name', 'twitter:image', ogImgUrl);
   }, [title, description, keywords, canonical, robots, ogType, ogImage]);
 
   return null;
