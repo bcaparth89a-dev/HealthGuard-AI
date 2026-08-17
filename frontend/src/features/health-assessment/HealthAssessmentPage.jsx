@@ -24,6 +24,7 @@ import { authService } from '../../services/authService';
 import Card, { CardContent } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import SEO from '../../components/common/SEO';
 
 export const HealthAssessmentPage = () => {
   const navigate = useNavigate();
@@ -221,6 +222,7 @@ export const HealthAssessmentPage = () => {
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
+      <SEO title="Health Assessment | HealthGuard AI" robots="noindex,nofollow" />
       {/* Toast Notification */}
       <AnimatePresence>
         {showToast && (

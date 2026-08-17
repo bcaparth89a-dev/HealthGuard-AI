@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /login
+Disallow: /dashboard
+Disallow: /family-members
+Disallow: /reports
+Disallow: /analytics
+Disallow: /settings
+Disallow: /symptoms
+Disallow: /predict
+Disallow: /records
+Disallow: /assessment
+Disallow: /patient-records
+
+Sitemap: https://YOUR-PRODUCTION-DOMAIN.com/sitemap.xml

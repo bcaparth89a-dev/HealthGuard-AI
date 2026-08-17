@@ -1,10 +1,12 @@
 import React from 'react';
 import { Settings, ShieldAlert, BadgeCheck, FileText, Database } from 'lucide-react';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import SEO from '../../components/common/SEO';
 
 export const SettingsPage = () => {
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
+      <SEO title="Settings | HealthGuard AI" robots="noindex,nofollow" />
       <div>
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
           <Settings className="text-teal-600" size={26} />

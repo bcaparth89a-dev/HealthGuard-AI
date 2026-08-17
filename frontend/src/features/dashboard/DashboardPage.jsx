@@ -36,6 +36,7 @@ import healthService from '../../services/healthService';
 import useAuth from '../../hooks/useAuth';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import SEO from '../../components/common/SEO';
 
 // Avatar Presets list for EMR family members
 const AVATAR_PRESETS = [
@@ -168,6 +169,7 @@ export const DashboardPage = () => {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto transition-colors duration-200">
+      <SEO title="Dashboard | HealthGuard AI" robots="noindex,nofollow" />
       
       {/* Welcome Greeting Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -641,7 +643,7 @@ export const DashboardPage = () => {
                         }`}
                         title={preset.name}
                       >
-                        <img src={preset.url} alt="preset" className="h-full w-full object-cover" />
+                        <img src={preset.url} alt={preset.name} className="h-full w-full object-cover" />
                       </div>
                     ))}
                   </div>

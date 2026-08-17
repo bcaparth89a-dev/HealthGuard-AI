@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { TrendingUp, Users, FileText, ChevronRight, Activity } from 'lucide-react';
 import healthService from '../../services/healthService';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import SEO from '../../components/common/SEO';
 
 export const AnalyticsPage = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export const AnalyticsPage = () => {
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto transition-colors duration-200">
+      <SEO title="Family Health Analytics | HealthGuard AI" robots="noindex,nofollow" />
       <div>
         <h1 className="text-2xl font-extrabold tracking-tight text-slate-808 dark:text-slate-100 flex items-center gap-2">
           <TrendingUp className="text-teal-600 dark:text-teal-400" size={26} />

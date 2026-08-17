@@ -8,6 +8,8 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import supabase from '../../lib/supabase';
 
+import SEO from '../../components/common/SEO';
+
 const getFriendlyErrorMessage = (error) => {
   if (!error) return 'Operation failed. Please try again.';
   const msg = String(error.message || error).toLowerCase();
@@ -88,7 +90,28 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors duration-200 px-4">
+    <>
+      <SEO
+        title="HealthGuard AI | AI-Powered Preventive Health Assessment"
+        description="HealthGuard AI provides AI-powered preventive health assessments, risk insights, BMI analysis, and personalized health guidance in one platform."
+        robots="index,follow"
+      />
+      <script type="application/ld+json">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "HealthGuard AI",
+          "applicationCategory": "HealthApplication",
+          "description": "HealthGuard AI provides AI-powered preventive health assessments, risk insights, BMI analysis, and personalized health guidance in one platform.",
+          "operatingSystem": "Web",
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "USD"
+          }
+        })}
+      </script>
+      <div className="flex h-screen items-center justify-center bg-slate-50 dark:bg-slate-900 transition-colors duration-200 px-4">
       <div className="w-full max-w-md space-y-6">
         <div className="flex flex-col items-center gap-3 text-center">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-500 text-white shadow-premium">
@@ -221,6 +244,7 @@ export const LoginPage = () => {
         </Card>
       </div>
     </div>
+    </>
   );
 };
 

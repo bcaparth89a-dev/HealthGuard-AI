@@ -6,6 +6,7 @@ import healthService from '../../services/healthService';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import SEO from '../../components/common/SEO';
 
 export const SymptomCheckerPage = () => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
@@ -29,6 +30,7 @@ export const SymptomCheckerPage = () => {
 
   return (
     <div className="space-y-8 transition-colors duration-200">
+      <SEO title="AI Health Assistant | HealthGuard AI" robots="noindex,nofollow" />
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">AI Symptom Evaluator</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">Describe physical anomalies for real-time triage guidance.</p>

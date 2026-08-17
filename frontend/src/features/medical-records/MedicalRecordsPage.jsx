@@ -4,6 +4,7 @@ import { FileText, Upload, Calendar, Search, AlertCircle, FileDigit, HelpCircle 
 import healthService from '../../services/healthService';
 import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
+import SEO from '../../components/common/SEO';
 
 export const MedicalRecordsPage = () => {
   const queryClient = useQueryClient();
@@ -47,6 +48,7 @@ export const MedicalRecordsPage = () => {
 
   return (
     <div className="space-y-8 transition-colors duration-200">
+      <SEO title="Medical Records | HealthGuard AI" robots="noindex,nofollow" />
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100">Medical Document Digitizer</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">Upload clinical records or laboratory tests for dynamic semantic indexing and OCR summaries.</p>

@@ -23,6 +23,7 @@ import Button from '../../components/ui/Button';
 import useAuth from '../../hooks/useAuth';
 import MedicalReportView from './MedicalReportView';
 import { generatePdfReport } from '../../utils/reportGenerator';
+import SEO from '../../components/common/SEO';
 
 export const MedicalReportsPage = () => {
   const queryClient = useQueryClient();
@@ -118,6 +119,7 @@ export const MedicalReportsPage = () => {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
+      <SEO title="Medical Reports | HealthGuard AI" robots="noindex,nofollow" />
       
       {/* Title Header */}
       <div>

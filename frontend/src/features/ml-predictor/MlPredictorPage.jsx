@@ -19,6 +19,7 @@ import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Ca
 import Button from '../../components/ui/Button';
 import { ReportPreviewModal } from './ReportPreviewModal';
 import { generatePdfReport } from '../../utils/reportGenerator';
+import SEO from '../../components/common/SEO';
 
 export const MlPredictorPage = () => {
   const navigate = useNavigate();
@@ -114,6 +115,7 @@ export const MlPredictorPage = () => {
   if (isLoading) {
     return (
       <div className="space-y-8 animate-pulse">
+        <SEO title="Health Risk Assessment | HealthGuard AI" robots="noindex,nofollow" />
         <div className="h-10 w-64 bg-slate-200 rounded-lg" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="h-48 bg-slate-200 rounded-2xl md:col-span-1" />
@@ -127,6 +129,7 @@ export const MlPredictorPage = () => {
   if (isError || !record) {
     return (
       <div className="flex min-h-[400px] flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white p-8 text-center shadow-premium max-w-2xl mx-auto">
+        <SEO title="Health Risk Assessment | HealthGuard AI" robots="noindex,nofollow" />
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 text-amber-500 mb-4">
           <ClipboardList size={24} />
         </div>
@@ -143,6 +146,7 @@ export const MlPredictorPage = () => {
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto transition-colors duration-200">
+      <SEO title="Health Risk Assessment | HealthGuard AI" robots="noindex,nofollow" />
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100 flex items-center gap-2">
           <Sparkles className="text-accent-500" size={24} />

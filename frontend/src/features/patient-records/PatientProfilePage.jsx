@@ -44,6 +44,7 @@ import Card, { CardHeader, CardTitle, CardContent } from '../../components/ui/Ca
 import Button from '../../components/ui/Button';
 import MedicalReportView from './MedicalReportView';
 import { generatePdfReport } from '../../utils/reportGenerator';
+import SEO from '../../components/common/SEO';
 
 export const PatientProfilePage = () => {
   const { patientId } = useParams();
@@ -189,6 +190,7 @@ export const PatientProfilePage = () => {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
+      <SEO title="Patient Profile | HealthGuard AI" robots="noindex,nofollow" />
       
       {/* Return Navigation control */}
       <div className="flex justify-between items-center print:hidden">

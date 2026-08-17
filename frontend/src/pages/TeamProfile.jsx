@@ -9,6 +9,7 @@ import ProjectCard from '../components/ProjectCard';
 import EducationCard from '../components/EducationCard';
 import CertificationCard from '../components/CertificationCard';
 import InterestChip from '../components/InterestChip';
+import SEO from '../components/common/SEO';
 
 export const TeamProfile = () => {
   const { developerId } = useParams();
@@ -51,6 +52,7 @@ export const TeamProfile = () => {
       transition={{ duration: 0.4 }}
       className="max-w-4xl mx-auto space-y-8 pb-16 dark:text-slate-300"
     >
+      <SEO title={`${member.name} | Developer Profile`} robots="noindex,nofollow" />
       {/* Top Section: Back Button */}
       <div className="flex justify-between items-center">
         <motion.button
