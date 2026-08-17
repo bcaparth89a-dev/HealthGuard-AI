@@ -19,7 +19,8 @@ import {
   TrendingUp,
   MapPin,
   Clock,
-  Sparkles
+  Sparkles,
+  ClipboardList
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
