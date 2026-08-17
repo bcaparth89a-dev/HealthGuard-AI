@@ -21,17 +21,25 @@ app.use(helmet());
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
+  'http://localhost:5000',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:5173',
+  'http://127.0.0.1:5000',
 ];
-if (config.clientUrl) {
-  config.clientUrl.split(',').forEach(url => {
-    const trimmed = url.trim();
-    if (trimmed && !allowedOrigins.includes(trimmed)) {
-      allowedOrigins.push(trimmed);
-    }
-  });
-}
+
+const addOrigins = (originsStr) => {
+  if (originsStr) {
+    originsStr.split(',').forEach(url => {
+      const trimmed = url.trim();
+      if (trimmed && !allowedOrigins.includes(trimmed)) {
+        allowedOrigins.push(trimmed);
+      }
+    });
+  }
+};
+
+addOrigins(config.clientUrl);
+addOrigins(config.allowedOrigins);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -39,12 +47,13 @@ app.use(cors({
     if (allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'Authorization'],
   credentials: true,
+  optionsSuccessStatus: 200
 }));
 
 // Request parsers
